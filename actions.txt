@@ -1,0 +1,18 @@
+Withdraw (5). Move up to double your speed without provoking an AoO due to moving out of your current spot.
+Run* (5). Move up to four times your speed, but lose your Dexterity bonus to your armor class.
+Melee attack (3). Take one swing at an enemy. If you like, you can fight defensively by taking a -4 penalty to hit in return for a +2 armor class bonus.
+Ranged attack* (3). -4 to hit if your target is engaged in melee with an ally of yours.
+Unarmed attack* (3). Only your opponent gets an AoO.
+Full attack (5). If you have multiple attacks, you need to use this action in order to use all of them.
+Cast Spell* (3). If you take damage from the AoO, you have to make a Concentration check to finish the spell. You can try to avoid provoking an AoO by making a Concentration check (DC 15 + spell level), but if that fails, you lose the spell.
+Move* (2) up to your speed. Causes an AoO if you move out of a threatened area.
+Crawl* (2) five feet if you're unfortunate enough to be prone.
+Draw a weapon (2)
+Manipulate an item (2), like open a door or pick something up.
+Stand up (2)
+Drop an item (0)
+Drop prone (0)
+Talk (0)
+Move five feet (0) but only if you are not otherwise moving this round.
+Delay action (5). Wait until later this round to act, but your initiative stays at that reduced value.
+Ready action (3). Prepare a specific action to respond to another specfic future action (e.g., "as soon as something comes through the door I shoot it").
