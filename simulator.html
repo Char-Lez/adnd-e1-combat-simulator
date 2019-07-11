@@ -24,8 +24,236 @@ console.log(myCookies);
 // Create Base64 Object
 var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/++[++^A-Za-z0-9+/=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
 
-// Define the string
 
+
+$weapons=[{"Name":"Axe, Battle","Cost_in_GP":5,"Weight":75,"Sm_Low":1,"Sm_High":8,"Lg_Low":1,"Lg_High":8,"Length_In_Ft":4,"Space_Required":4,"Speed_Factor":7,"AC_2":-3,"AC_3":-2,"AC_4":-2,"AC_5":-1,"AC_6":0,"AC_7":0,"AC_8":1,"AC_9":1,"AC_10":2},
+{"Name":"Bardiche","Cost_in_GP":7,"Weight":125,"Sm_Low":2,"Sm_High":8,"Lg_Low":3,"Lg_High":12,"Length_In_Ft":5,"Space_Required":5,"Speed_Factor":9,"AC_2":-2,"AC_3":-1,"AC_4":0,"AC_5":0,"AC_6":1,"AC_7":1,"AC_8":2,"AC_9":2,"AC_10":3},
+{"Name":"Bec de corbin","Cost_in_GP":6,"Weight":100,"Sm_Low":1,"Sm_High":8,"Lg_Low":1,"Lg_High":6,"Length_In_Ft":6,"Space_Required":6,"Speed_Factor":9,"AC_2":2,"AC_3":2,"AC_4":2,"AC_5":0,"AC_6":0,"AC_7":0,"AC_8":0,"AC_9":0,"AC_10":-1},
+{"Name":"Bill-Guisarme","Cost_in_GP":6,"Weight":150,"Sm_Low":2,"Sm_High":8,"Lg_Low":1,"Lg_High":10,"Length_In_Ft":8,"Space_Required":2,"Speed_Factor":10,"AC_2":0,"AC_3":0,"AC_4":0,"AC_5":0,"AC_6":0,"AC_7":0,"AC_8":1,"AC_9":0,"AC_10":0},
+{"Name":"Dagger","Cost_in_GP":2,"Weight":10,"Sm_Low":1,"Sm_High":4,"Lg_Low":1,"Lg_High":3,"Length_In_Ft":15,"Space_Required":1,"Speed_Factor":2,"AC_2":-3,"AC_3":-3,"AC_4":-2,"AC_5":-2,"AC_6":0,"AC_7":0,"AC_8":1,"AC_9":1,"AC_10":3},
+{"Name":"Fauchard","Cost_in_GP":3,"Weight":60,"Sm_Low":1,"Sm_High":6,"Lg_Low":1,"Lg_High":8,"Length_In_Ft":8,"Space_Required":2,"Speed_Factor":8,"AC_2":-2,"AC_3":-2,"AC_4":-1,"AC_5":-1,"AC_6":0,"AC_7":0,"AC_8":0,"AC_9":-1,"AC_10":-1},
+{"Name":"Fauchard-fork","Cost_in_GP":8,"Weight":80,"Sm_Low":1,"Sm_High":8,"Lg_Low":1,"Lg_High":10,"Length_In_Ft":8,"Space_Required":2,"Speed_Factor":8,"AC_2":-1,"AC_3":-1,"AC_4":-1,"AC_5":0,"AC_6":0,"AC_7":0,"AC_8":1,"AC_9":0,"AC_10":1},
+{"Name":"Flail, footman's","Cost_in_GP":3,"Weight":150,"Sm_Low":2,"Sm_High":7,"Lg_Low":2,"Lg_High":8,"Length_In_Ft":4,"Space_Required":6,"Speed_Factor":7,"AC_2":2,"AC_3":2,"AC_4":1,"AC_5":2,"AC_6":1,"AC_7":1,"AC_8":1,"AC_9":1,"AC_10":-1},
+{"Name":"Flail, horseman's","Cost_in_GP":8,"Weight":35,"Sm_Low":2,"Sm_High":5,"Lg_Low":2,"Lg_High":5,"Length_In_Ft":2,"Space_Required":4,"Speed_Factor":6,"AC_2":0,"AC_3":0,"AC_4":0,"AC_5":0,"AC_6":0,"AC_7":1,"AC_8":1,"AC_9":1,"AC_10":0},
+{"Name":"Fork, military","Cost_in_GP":4,"Weight":75,"Sm_Low":1,"Sm_High":8,"Lg_Low":2,"Lg_High":8,"Length_In_Ft":7,"Space_Required":1,"Speed_Factor":7,"AC_2":-2,"AC_3":-2,"AC_4":-1,"AC_5":0,"AC_6":0,"AC_7":1,"AC_8":1,"AC_9":0,"AC_10":1},
+{"Name":"Glaive","Cost_in_GP":6,"Weight":75,"Sm_Low":1,"Sm_High":6,"Lg_Low":1,"Lg_High":10,"Length_In_Ft":8,"Space_Required":1,"Speed_Factor":8,"AC_2":-1,"AC_3":-1,"AC_4":0,"AC_5":0,"AC_6":0,"AC_7":0,"AC_8":0,"AC_9":0,"AC_10":0},
+{"Name":"Glaive-Guisarme","Cost_in_GP":10,"Weight":100,"Sm_Low":2,"Sm_High":8,"Lg_Low":2,"Lg_High":12,"Length_In_Ft":8,"Space_Required":1,"Speed_Factor":9,"AC_2":-1,"AC_3":-1,"AC_4":0,"AC_5":0,"AC_6":0,"AC_7":0,"AC_8":0,"AC_9":0,"AC_10":0},
+{"Name":"Guisarme","Cost_in_GP":5,"Weight":80,"Sm_Low":2,"Sm_High":8,"Lg_Low":1,"Lg_High":8,"Length_In_Ft":6,"Space_Required":2,"Speed_Factor":8,"AC_2":-2,"AC_3":-2,"AC_4":-1,"AC_5":-1,"AC_6":0,"AC_7":0,"AC_8":0,"AC_9":-1,"AC_10":-1},
+{"Name":"Gusarm-Voulge","Cost_in_GP":7,"Weight":150,"Sm_Low":2,"Sm_High":8,"Lg_Low":2,"Lg_High":8,"Length_In_Ft":7,"Space_Required":2,"Speed_Factor":10,"AC_2":-1,"AC_3":-1,"AC_4":0,"AC_5":1,"AC_6":1,"AC_7":1,"AC_8":0,"AC_9":0,"AC_10":0},
+{"Name":"Halberd","Cost_in_GP":9,"Weight":175,"Sm_Low":1,"Sm_High":10,"Lg_Low":2,"Lg_High":12,"Length_In_Ft":5,"Space_Required":5,"Speed_Factor":9,"AC_2":1,"AC_3":1,"AC_4":1,"AC_5":2,"AC_6":2,"AC_7":2,"AC_8":1,"AC_9":1,"AC_10":0},
+{"Name":"Hammer, Lucern","Cost_in_GP":7,"Weight":150,"Sm_Low":2,"Sm_High":8,"Lg_Low":1,"Lg_High":6,"Length_In_Ft":5,"Space_Required":5,"Speed_Factor":9,"AC_2":1,"AC_3":1,"AC_4":2,"AC_5":2,"AC_6":2,"AC_7":1,"AC_8":1,"AC_9":0,"AC_10":0},
+{"Name":"Hammer","Cost_in_GP":1,"Weight":50,"Sm_Low":2,"Sm_High":5,"Lg_Low":1,"Lg_High":4,"Length_In_Ft":1.5,"Space_Required":2,"Speed_Factor":4,"AC_2":0,"AC_3":1,"AC_4":0,"AC_5":1,"AC_6":0,"AC_7":0,"AC_8":0,"AC_9":0,"AC_10":0},
+{"Name":"Lance (light horse)","Cost_in_GP":6,"Weight":50,"Sm_Low":1,"Sm_High":6,"Lg_Low":1,"Lg_High":8,"Length_In_Ft":10,"Space_Required":1,"Speed_Factor":7,"AC_2":-2,"AC_3":-2,"AC_4":-1,"AC_5":0,"AC_6":0,"AC_7":0,"AC_8":0,"AC_9":0,"AC_10":0},
+{"Name":"Lance (medium horse)","Cost_in_GP":6,"Weight":100,"Sm_Low":2,"Sm_High":7,"Lg_Low":2,"Lg_High":12,"Length_In_Ft":12,"Space_Required":1,"Speed_Factor":6,"AC_2":0,"AC_3":1,"AC_4":1,"AC_5":1,"AC_6":1,"AC_7":0,"AC_8":0,"AC_9":0,"AC_10":0},
+{"Name":"Lance (heavy horse)","Cost_in_GP":6,"Weight":150,"Sm_Low":3,"Sm_High":9,"Lg_Low":3,"Lg_High":18,"Length_In_Ft":14,"Space_Required":1,"Speed_Factor":8,"AC_2":3,"AC_3":3,"AC_4":2,"AC_5":2,"AC_6":2,"AC_7":1,"AC_8":1,"AC_9":0,"AC_10":0},
+{"Name":"Mace, footman's","Cost_in_GP":8,"Weight":100,"Sm_Low":2,"Sm_High":7,"Lg_Low":1,"Lg_High":6,"Length_In_Ft":2.5,"Space_Required":4,"Speed_Factor":7,"AC_2":1,"AC_3":1,"AC_4":0,"AC_5":0,"AC_6":0,"AC_7":0,"AC_8":0,"AC_9":1,"AC_10":-1},
+{"Name":"Mace, horseman's","Cost_in_GP":4,"Weight":50,"Sm_Low":1,"Sm_High":6,"Lg_Low":1,"Lg_High":4,"Length_In_Ft":1.5,"Space_Required":2,"Speed_Factor":6,"AC_2":1,"AC_3":1,"AC_4":0,"AC_5":0,"AC_6":0,"AC_7":0,"AC_8":0,"AC_9":0,"AC_10":0},
+{"Name":"Morning Star","Cost_in_GP":5,"Weight":125,"Sm_Low":2,"Sm_High":8,"Lg_Low":2,"Lg_High":7,"Length_In_Ft":4,"Space_Required":5,"Speed_Factor":7,"AC_2":0,"AC_3":1,"AC_4":1,"AC_5":1,"AC_6":1,"AC_7":1,"AC_8":1,"AC_9":2,"AC_10":2},
+{"Name":"Partisan","Cost_in_GP":10,"Weight":80,"Sm_Low":1,"Sm_High":6,"Lg_Low":2,"Lg_High":7,"Length_In_Ft":7,"Space_Required":3,"Speed_Factor":9,"AC_2":0,"AC_3":0,"AC_4":0,"AC_5":0,"AC_6":0,"AC_7":0,"AC_8":0,"AC_9":0,"AC_10":0},
+{"Name":"Pick, Military, footman's","Cost_in_GP":8,"Weight":60,"Sm_Low":2,"Sm_High":7,"Lg_Low":2,"Lg_High":8,"Length_In_Ft":4,"Space_Required":4,"Speed_Factor":7,"AC_2":2,"AC_3":2,"AC_4":1,"AC_5":1,"AC_6":0,"AC_7":-1,"AC_8":-1,"AC_9":-1,"AC_10":-2},
+{"Name":"Pick, Military, horseman's","Cost_in_GP":5,"Weight":40,"Sm_Low":2,"Sm_High":5,"Lg_Low":1,"Lg_High":4,"Length_In_Ft":2,"Space_Required":2,"Speed_Factor":5,"AC_2":1,"AC_3":1,"AC_4":1,"AC_5":1,"AC_6":0,"AC_7":0,"AC_8":-1,"AC_9":-1,"AC_10":-1},
+{"Name":"Pike, Awl","Cost_in_GP":3,"Weight":80,"Sm_Low":1,"Sm_High":6,"Lg_Low":1,"Lg_High":12,"Length_In_Ft":18,"Space_Required":1,"Speed_Factor":13,"AC_2":-1,"AC_3":0,"AC_4":0,"AC_5":0,"AC_6":0,"AC_7":0,"AC_8":0,"AC_9":-1,"AC_10":-2},
+{"Name":"Ranseur","Cost_in_GP":4,"Weight":50,"Sm_Low":2,"Sm_High":8,"Lg_Low":2,"Lg_High":8,"Length_In_Ft":8,"Space_Required":1,"Speed_Factor":8,"AC_2":-2,"AC_3":-1,"AC_4":-1,"AC_5":0,"AC_6":0,"AC_7":0,"AC_8":0,"AC_9":0,"AC_10":1},
+{"Name":"Scimitar","Cost_in_GP":15,"Weight":40,"Sm_Low":1,"Sm_High":8,"Lg_Low":1,"Lg_High":8,"Length_In_Ft":3,"Space_Required":2,"Speed_Factor":4,"AC_2":-3,"AC_3":-2,"AC_4":-2,"AC_5":-1,"AC_6":0,"AC_7":0,"AC_8":1,"AC_9":1,"AC_10":3},
+{"Name":"Spear","Cost_in_GP":1,"Weight":40,"Sm_Low":1,"Sm_High":6,"Lg_Low":1,"Lg_High":8,"Length_In_Ft":5,"Space_Required":1,"Speed_Factor":6,"AC_2":-2,"AC_3":-1,"AC_4":-1,"AC_5":-1,"AC_6":0,"AC_7":0,"AC_8":0,"AC_9":0,"AC_10":0},
+{"Name":"Spetum","Cost_in_GP":3,"Weight":50,"Sm_Low":2,"Sm_High":7,"Lg_Low":2,"Lg_High":12,"Length_In_Ft":8,"Space_Required":1,"Speed_Factor":8,"AC_2":-2,"AC_3":-1,"AC_4":0,"AC_5":0,"AC_6":0,"AC_7":0,"AC_8":0,"AC_9":1,"AC_10":2},
+{"Name":"Sword, Bastard","Cost_in_GP":25,"Weight":100,"Sm_Low":2,"Sm_High":8,"Lg_Low":2,"Lg_High":16,"Length_In_Ft":4.5,"Space_Required":4,"Speed_Factor":6,"AC_2":0,"AC_3":0,"AC_4":1,"AC_5":1,"AC_6":1,"AC_7":1,"AC_8":1,"AC_9":1,"AC_10":0},
+{"Name":"Sword, Broad","Cost_in_GP":10,"Weight":75,"Sm_Low":2,"Sm_High":8,"Lg_Low":2,"Lg_High":7,"Length_In_Ft":3.5,"Space_Required":4,"Speed_Factor":5,"AC_2":-3,"AC_3":-2,"AC_4":-1,"AC_5":0,"AC_6":0,"AC_7":1,"AC_8":1,"AC_9":1,"AC_10":2},
+{"Name":"Sword, Long","Cost_in_GP":15,"Weight":60,"Sm_Low":1,"Sm_High":8,"Lg_Low":1,"Lg_High":12,"Length_In_Ft":3.5,"Space_Required":3,"Speed_Factor":5,"AC_2":-2,"AC_3":-1,"AC_4":0,"AC_5":0,"AC_6":0,"AC_7":0,"AC_8":0,"AC_9":1,"AC_10":2},
+{"Name":"Sword, Short","Cost_in_GP":8,"Weight":35,"Sm_Low":1,"Sm_High":6,"Lg_Low":1,"Lg_High":8,"Length_In_Ft":2,"Space_Required":1,"Speed_Factor":3,"AC_2":-3,"AC_3":-2,"AC_4":-1,"AC_5":0,"AC_6":0,"AC_7":0,"AC_8":1,"AC_9":0,"AC_10":2},
+{"Name":"Sword, Two-handed","Cost_in_GP":30,"Weight":250,"Sm_Low":1,"Sm_High":10,"Lg_Low":3,"Lg_High":18,"Length_In_Ft":6,"Space_Required":6,"Speed_Factor":10,"AC_2":2,"AC_3":2,"AC_4":2,"AC_5":2,"AC_6":3,"AC_7":3,"AC_8":3,"AC_9":1,"AC_10":0},
+{"Name":"Trident","Cost_in_GP":4,"Weight":50,"Sm_Low":2,"Sm_High":7,"Lg_Low":3,"Lg_High":12,"Length_In_Ft":4,"Space_Required":1,"Speed_Factor":6,"AC_2":-3,"AC_3":-2,"AC_4":-1,"AC_5":-1,"AC_6":0,"AC_7":0,"AC_8":1,"AC_9":0,"AC_10":1},
+{"Name":"Voulge","Cost_in_GP":2,"Weight":125,"Sm_Low":2,"Sm_High":8,"Lg_Low":2,"Lg_High":8,"Length_In_Ft":8,"Space_Required":2,"Speed_Factor":10,"AC_2":-1,"AC_3":-1,"AC_4":0,"AC_5":1,"AC_6":1,"AC_7":1,"AC_8":0,"AC_9":0,"AC_10":0}];
+			//
+			//
+			$( document ).ready(function()
+			{
+				var $menu;
+				var $k;
+				var $option;
+				//
+				$menu=$("#player_weapon");   
+				for ($k=0; $k<$weapons.length; $k++)
+				{
+					$option="<option value='"+$k+"'>"+$weapons[$k].Name+"</option>";
+					$menu.append($option);
+				}
+				//
+				$menu=$("#monster_weapon");   
+				for ($k=0; $k<$weapons.length; $k++)
+				{
+					$option="<option value='"+$k+"'>"+$weapons[$k].Name+"</option>";
+					$menu.append($option);
+				}
+			});
+			//
+			//
+			function get_dice($low, $high)
+			{
+				var $result=new Array();
+				//
+				$result={count:"ERR", sides:"ERR", plus:"ERR"};
+				//$result={count:, sides:, plus:};
+				if ($low===1)
+				{
+					if ($high===2) {$result={count:1, sides:2, plus:0};}
+					if ($high===3) {$result={count:1, sides:3, plus:0};}
+					if ($high===4) {$result={count:1, sides:4, plus:0};}
+					if ($high===6) {$result={count:1, sides:6, plus:0};}
+					if ($high===8) {$result={count:1, sides:8, plus:0};}
+					if ($high===10) {$result={count:1, sides:10, plus:0};}
+					if ($high===12) {$result={count:1, sides:12, plus:0};}
+				}
+				if ($low===2)
+				{
+					if ($high===5) {$result={count:1, sides:4, plus:1};}
+					if ($high===7) {$result={count:1, sides:6, plus:1};}
+					if ($high===8) {$result={count:2, sides:4, plus:0};}
+					if ($high===12) {$result={count:2, sides:6, plus:0};}
+					if ($high===16) {$result={count:2, sides:8, plus:0};}
+					
+				}
+				if ($low===3)
+				{
+					if ($high===9) {$result={count:2, sides:4, plus:1};}
+					if ($high===12) {$result={count:3, sides:4, plus:0};}
+					if ($high===18) {$result={count:3, sides:6, plus:0};}
+				}
+				//
+				return $result;
+			} // get_dice()
+			//
+			//
+			function player_dex()
+			{
+				var $dex;
+				var $react;
+				var $defense;
+				//
+				$react=0;
+				$defense=0
+				//
+				$dex=parseInt($('#player_dexterity').val());
+				//
+				if ($dex===3) {$react=-3; $defense=4;}
+				if ($dex===4) {$react=-2; $defense=3;}
+				if ($dex===5) {$react=-1; $defense=2;}
+				if ($dex===6) {$defense=1;}
+				if ($dex===15) {$defense=-1;}
+				if ($dex===16) {$react=1; $defense=-2;}
+				if ($dex===17) {$react=2; $defense=-3;}
+				if ($dex===18) {$react=3; $defense=-4;}
+				//
+				$('#player_dex_reaction_adjustment').val($react);
+				$('#player_dex_adjustment').val($defense);
+				//
+				return;
+			} // player_dex()
+			//
+			//
+			function player_weapon()
+			{
+				var $dice;
+				var $id;
+				var $low;
+				var $high;
+				var $speed;
+				var $opponent_size;
+				//
+				$id=$('#player_weapon').val();
+				//
+				$speed=$weapons[$id].Speed_Factor;
+				//
+				$('#player_weapon_speed').val($speed);
+				//
+				$opponent_size=$("input[name='monster_size']:checked"). val();
+				//
+				if ($opponent_size==='sm')
+				{
+					$low=$weapons[$id].Sm_Low;
+					$high=$weapons[$id].Sm_High;
+				}
+				else
+				{
+					$low=$weapons[$id].Lg_Low;
+					$high=$weapons[$id].Lg_High;
+				}
+				//
+				$dice=get_dice($low, $high);
+				//
+				$('#player_damage_dice_count').val($dice.count);
+				$('#player_damage_dice_sides').val($dice.sides);
+				$('#player_damage_plus').val($dice.plus);
+				//
+				return;
+			} // player_weapon()
+			//
+			//
+			function monster_dex()
+			{
+				var $dex;
+				var $react;
+				var $defense;
+				//
+				$react=0;
+				$defense=0
+				//
+				$dex=parseInt($('#monster_dexterity').val());
+				//
+				if ($dex===3) {$react=-3; $defense=4;}
+				if ($dex===4) {$react=-2; $defense=3;}
+				if ($dex===5) {$react=-1; $defense=2;}
+				if ($dex===6) {$defense=1;}
+				if ($dex===15) {$defense=-1;}
+				if ($dex===16) {$react=1; $defense=-2;}
+				if ($dex===17) {$react=2; $defense=-3;}
+				if ($dex===18) {$react=3; $defense=-4;}
+				//
+				$('#monster_dex_reaction_adjustment').val($react);
+				$('#monster_dex_adjustment').val($defense);
+				//
+				return;
+			} // monster_dex()
+			//
+			//
+			function monster_weapon()
+			{
+				var $dice;
+				var $id;
+				var $low;
+				var $high;
+				var $speed;
+				var $opponent_size;
+				//
+				$id=$('#monster_weapon').val();
+				//
+				$speed=$weapons[$id].Speed_Factor;
+				//
+				$('#monster_weapon_speed').val($speed);
+				//
+				$opponent_size=$("input[name='player_size']:checked"). val();
+				//
+				if ($opponent_size==='sm')
+				{
+					$low=$weapons[$id].Sm_Low;
+					$high=$weapons[$id].Sm_High;
+				}
+				else
+				{
+					$low=$weapons[$id].Lg_Low;
+					$high=$weapons[$id].Lg_High;
+				}
+				//
+				$dice=get_dice($low, $high);
+				//
+				$('#monster_damage_dice_count').val($dice.count);
+				$('#monster_damage_dice_sides').val($dice.sides);
+				$('#monster_damage_plus').val($dice.plus);
+				//
+				return;
+			} // monster_weapon()
+			//
+			//
 			function save_player()
 			{
 				// Define the variables
@@ -67,7 +295,8 @@ var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456
 				//
 				return;
 			} // save_player()
-
+			//
+			//
 			function fight($fights)
 			{
 				// Simulate a fight
@@ -488,6 +717,8 @@ var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456
 				if (($('#player_ac').val()!='') && 
 						($('#player_thaco').val()!='') && 
 						($('#player_dex_adjustment').val()!='') && 
+						($('#player_dex_reaction_adjustment').val()!='') && 
+						($('#player_weapon_speed').val()!='') && 
 						($('#player_weapon_adjustment').val()!='') && 
 						($('#player_str_adjustment').val()!='') && 
 						($('#player_hit_points').val()!='') && 
@@ -497,6 +728,8 @@ var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456
 						($('#monster_ac').val()!='') && 
 						($('#monster_thaco').val()!='') && 
 						($('#monster_dex_adjustment').val()!='') && 
+						($('#monster_dex_reaction_adjustment').val()!='') && 
+						($('#monster_weapon_speed').val()!='') && 
 						($('#monster_weapon_adjustment').val()!='') && 
 						($('#monster_str_adjustment').val()!='') && 
 						($('#monster_hit_points').val()!='') && 
@@ -537,47 +770,226 @@ var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456
 					</td>
 				</tr>
 				<tr>
-					<td align=center colspan=2>Player&nbsp;Character&nbsp;&nbsp;&nbsp;<button onclick='save_player();'>Save</button></td><td align=center colspan=2>Monster&nbsp;&nbsp;&nbsp;<button onclick='save_monster();'>Save</button></td>
+					<td colspan=2><b><font size='+2'>Player</font></b>&nbsp;&nbsp;&nbsp;<button onclick='save_player();'>Save</button></td>
+					<td colspan=2><b><font size='+2'>Monster</font></b>&nbsp;&nbsp;&nbsp;<button onclick='save_monster();'>Save</button></td>
 				</tr>
 				<tr>
-					<td>Armor&nbsp;Class</td><td><input id='player_ac' type='input' onKeyUp='update_fight();'></td>
-					<td>Armor&nbsp;Class</td><td><input id='monster_ac' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Size</td><td><input id='player_size_sm' name='player_size' type='radio' value='sm' onchange='update_fight();' checked>SM&nbsp;&nbsp;&nbsp;<input id='player_size_l' name='player_size' type='radio' value='l' onchange='update_fight();'>L</td>
+					<td>&nbsp;&nbsp;&nbsp;Size</td><td><input id='monster_size_sm' name='monster_size' type='radio' value='sm' onchange='update_fight();' checked>SM&nbsp;&nbsp;&nbsp;<input id='monster_size_l' name='monster_size' type='radio' value='l' onchange='update_fight();'>L</td>
 				</tr>
 				<tr>
-					<td>Dex.&nbsp;Defense&nbsp;Adjustment</td><td><input id='player_dex_adjustment' type='input' onKeyUp='update_fight();'></td>
-					<td>Dex.&nbsp;Defense&nbsp;Adjustment</td><td><input id='monster_dex_adjustment' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Strength</td>
+					<td>
+						<select id='player_strength' onchange='player_str();'>
+							<option value='3'>3</option>
+							<option value='4'>4</option>
+							<option value='5'>5</option>
+							<option value='6'>6</option>
+							<option value='7'>7</option>
+							<option value='8'>8</option>
+							<option value='9'>9</option>
+							<option value='10' selected>10</option>
+							<option value='11'>11</option>
+							<option value='12'>12</option>
+							<option value='13'>13</option>
+							<option value='14'>14</option>
+							<option value='15'>15</option>
+							<option value='16'>16</option>
+							<option value='17'>17</option>
+							<option value='18'>18</option>
+						</select>
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;Strength</td>
+					<td>
+						<select id='monster_strength' onchange='monster_str();'>
+							<option value='3'>3</option>
+							<option value='4'>4</option>
+							<option value='5'>5</option>
+							<option value='6'>6</option>
+							<option value='7'>7</option>
+							<option value='8'>8</option>
+							<option value='9'>9</option>
+							<option value='10' selected>10</option>
+							<option value='11'>11</option>
+							<option value='12'>12</option>
+							<option value='13'>13</option>
+							<option value='14'>14</option>
+							<option value='15'>15</option>
+							<option value='16'>16</option>
+							<option value='17'>17</option>
+							<option value='18'>18</option>
+						</select>
+					</td>
 				</tr>
 				<tr>
-					<td>THACO</td><td><input id='player_thaco' type='input' onKeyUp='update_fight();'></td>
-					<td>THACO</td><td><input id='monster_thaco' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Dexterity</td>
+					<td>
+						<select id='player_dexterity' onchange='player_dex();'>
+							<option value='3'>3</option>
+							<option value='4'>4</option>
+							<option value='5'>5</option>
+							<option value='6'>6</option>
+							<option value='7'>7</option>
+							<option value='8'>8</option>
+							<option value='9'>9</option>
+							<option value='10' selected>10</option>
+							<option value='11'>11</option>
+							<option value='12'>12</option>
+							<option value='13'>13</option>
+							<option value='14'>14</option>
+							<option value='15'>15</option>
+							<option value='16'>16</option>
+							<option value='17'>17</option>
+							<option value='18'>18</option>
+						</select>
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;Dexterity</td>
+					<td>
+						<select id='monster_dexterity' onchange='monster_dex();'>
+							<option value='3'>3</option>
+							<option value='4'>4</option>
+							<option value='5'>5</option>
+							<option value='6'>6</option>
+							<option value='7'>7</option>
+							<option value='8'>8</option>
+							<option value='9'>9</option>
+							<option value='10' selected>10</option>
+							<option value='11'>11</option>
+							<option value='12'>12</option>
+							<option value='13'>13</option>
+							<option value='14'>14</option>
+							<option value='15'>15</option>
+							<option value='16'>16</option>
+							<option value='17'>17</option>
+							<option value='18'>18</option>
+						</select>
+					</td>
 				</tr>
 				<tr>
-					<td>Str&nbsp;To&nbsp;Hit&nbsp;Adj.</td><td><input id='player_str_adjustment' type='input' onKeyUp='update_fight();'></td>
-					<td>Str&nbsp;To&nbsp;Hit&nbsp;Adj.</td><td><input id='monster_str_adjustment' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Weapon</td><td><select id='player_weapon' onchange='player_weapon();'><option value='-1'>Choose Weapon</option></select></td>
+					<td>&nbsp;&nbsp;&nbsp;Weapon</td><td><select id='monster_weapon' onchange='monster_weapon();'><option value='-1'>Choose Weapon</option></select></td>
 				</tr>
 				<tr>
-					<td>Hit&nbsp;Points</td><td><input id='player_hit_points' type='input' onKeyUp='update_fight();'></td>
-					<td>Hit&nbsp;Points</td><td><input id='monster_hit_points' type='input' onKeyUp='update_fight();'></td>
+					<td colspan=2 valign='bottom'><b><font size='+2'>Armor&nbsp;Class</font></b></td>
+					<td colspan=2 valign='bottom'><b><font size='+2'>Armor&nbsp;Class</font></b></td>
 				</tr>
 				<tr>
-					<td>Damage&nbsp;Dice&nbsp;Sides</td><td><input id='player_damage_dice_sides' type='input' onKeyUp='update_fight();'></td>
-					<td>Damage&nbsp;Dice&nbsp;Sides</td><td><input id='monster_damage_dice_sides' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Armor&nbsp;Class</td>
+					<td>
+						<select id='player_ac' onKeyUp='update_fight();'>
+							<option value='-10'>-10</option>
+							<option value='-9'>-9</option>
+							<option value='-8'>-8</option>
+							<option value='-7'>-7</option>
+							<option value='-6'>-6</option>
+							<option value='-5'>-5</option>
+							<option value='-4'>-4</option>
+							<option value='-3'>-3</option>
+							<option value='-2'>-2</option>
+							<option value='-1'>-1</option>
+							<option value='0'>0</option>
+							<option value='1'>1</option>
+							<option value='2'>2</option>
+							<option value='3'>3</option>
+							<option value='4'>4</option>
+							<option value='5'>5</option>
+							<option value='6'>6</option>
+							<option value='7'>7</option>
+							<option value='8'>8</option>
+							<option value='9'>9</option>
+							<option value='10' selected>10</option>
+						</select>
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;Armor&nbsp;Class</td>
+					<td>
+						<select id='monster_ac' onKeyUp='update_fight();'>
+							<option value='-10'>-10</option>
+							<option value='-9'>-9</option>
+							<option value='-8'>-8</option>
+							<option value='-7'>-7</option>
+							<option value='-6'>-6</option>
+							<option value='-5'>-5</option>
+							<option value='-4'>-4</option>
+							<option value='-3'>-3</option>
+							<option value='-2'>-2</option>
+							<option value='-1'>-1</option>
+							<option value='0'>0</option>
+							<option value='1'>1</option>
+							<option value='2'>2</option>
+							<option value='3'>3</option>
+							<option value='4'>4</option>
+							<option value='5'>5</option>
+							<option value='6'>6</option>
+							<option value='7'>7</option>
+							<option value='8'>8</option>
+							<option value='9'>9</option>
+							<option value='10' selected>10</option>
+						</select>
+					</td>
 				</tr>
 				<tr>
-					<td>Damage&nbsp;Dice&nbsp;Count</td><td><input id='player_damage_dice_count' type='input' onKeyUp='update_fight();'></td>
-					<td>Damage&nbsp;Dice&nbsp;Count</td><td><input id='monster_damage_dice_count' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Dex.&nbsp;Defense&nbsp;Adjustment</td><td><input id='player_dex_adjustment' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Dex.&nbsp;Defense&nbsp;Adjustment</td><td><input id='monster_dex_adjustment' type='input' onKeyUp='update_fight();'></td>
 				</tr>
 				<tr>
-					<td>Damage&nbsp;Plus</td><td><input id='player_damage_plus' type='input' onKeyUp='update_fight();'></td>
-					<td>Damage&nbsp;Plus</td><td><input id='monster_damage_plus' type='input' onKeyUp='update_fight();'></td>
+					<td colspan=2 valign='bottom'><b><font size='+2'>Initiative</font></b></td>
+					<td colspan=2 valign='bottom'><b><font size='+2'>Initiative</font></b></td>
 				</tr>
 				<tr>
-					<td>XP&nbsp;Base</td><td><input id='player_xp_base' type='input' onKeyUp='update_fight();'></td>
-					<td>XP&nbsp;Base</td><td><input id='monster_xp_base' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Dex.&nbsp;Reaction&nbsp;Adjustment</td><td><input id='player_dex_reaction_adjustment' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Dex.&nbsp;Reaction&nbsp;Adjustment</td><td><input id='monster_dex_reaction_adjustment' type='input' onKeyUp='update_fight();'></td>
 				</tr>
 				<tr>
-					<td>XP&nbsp;Per&nbsp;HP</td><td><input id='player_xp_per_hp' type='input' onKeyUp='update_fight();'></td>
-					<td>XP&nbsp;Per&nbsp;HP</td><td><input id='monster_xp_per_hp' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Weapon&nbsp;Speed</td><td><input id='player_weapon_speed' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Weapon&nbsp;Speed</td><td><input id='monster_weapon_speed' type='input' onKeyUp='update_fight();'></td>
+				</tr>
+				<tr>
+					<td colspan=2 valign='bottom'><b><font size='+2'>To&nbsp;Hit</font></b></td>
+					<td colspan=2 valign='bottom'><b><font size='+2'>To&nbsp;Hit</font></b></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;THACO</td><td><input id='player_thaco' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;THACO</td><td><input id='monster_thaco' type='input' onKeyUp='update_fight();'></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;Str.&nbsp;To&nbsp;Hit&nbsp;Adj.</td><td><input id='player_str_adjustment' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Str.&nbsp;To&nbsp;Hit&nbsp;Adj.</td><td><input id='monster_str_adjustment' type='input' onKeyUp='update_fight();'></td>
+				</tr>
+				<tr>
+					<td colspan=2 valign='bottom'><b><font size='+2'>Hit&nbsp;Points</font></b></td>
+					<td colspan=2 valign='bottom'><b><font size='+2'>Hit&nbsp;Points</font></b></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;Hit&nbsp;Points</td><td><input id='player_hit_points' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Hit&nbsp;Points</td><td><input id='monster_hit_points' type='input' onKeyUp='update_fight();'></td>
+				</tr>
+				<tr>
+					<td colspan=2 valign='bottom'><b><font size='+2'>Hit&nbsp;Dice</font></b></td>
+					<td colspan=2 valign='bottom'><b><font size='+2'>Hit&nbsp;Dice</font></b></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;Damage&nbsp;Dice&nbsp;Count</td><td><input id='player_damage_dice_count' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Damage&nbsp;Dice&nbsp;Count</td><td><input id='monster_damage_dice_count' type='input' onKeyUp='update_fight();'></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;Damage&nbsp;Dice&nbsp;Sides</td><td><input id='player_damage_dice_sides' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Damage&nbsp;Dice&nbsp;Sides</td><td><input id='monster_damage_dice_sides' type='input' onKeyUp='update_fight();'></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;Damage&nbsp;Plus</td><td><input id='player_damage_plus' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Damage&nbsp;Plus</td><td><input id='monster_damage_plus' type='input' onKeyUp='update_fight();'></td>
+				</tr>
+				<tr>
+					<td colspan=2 valign='bottom'><b><font size='+2'>Experience</font></b></td>
+					<td colspan=2 valign='bottom'><b><font size='+2'>Experience</font></b></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;XP&nbsp;Base</td><td><input id='player_xp_base' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;XP&nbsp;Base</td><td><input id='monster_xp_base' type='input' onKeyUp='update_fight();'></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;XP&nbsp;Per&nbsp;HP</td><td><input id='player_xp_per_hp' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;XP&nbsp;Per&nbsp;HP</td><td><input id='monster_xp_per_hp' type='input' onKeyUp='update_fight();'></td>
 				</tr>
 				<tr>
 					<td colspan=2 align=center><input id='fight1' type='submit' value='FIGHT 1' onclick='fight(1);' disabled></td>
