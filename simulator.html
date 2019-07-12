@@ -19,12 +19,13 @@
   return cookies;
 }
 var myCookies = getCookies();
-console.log(myCookies);
+//console.log(myCookies);
 
 // Create Base64 Object
 var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/++[++^A-Za-z0-9+/=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
 
 
+// THANK YOU https://shancarter.github.io/mr-data-converter/
 
 $weapons=[{"Name":"Axe, Battle","Cost_in_GP":5,"Weight":75,"Sm_Low":1,"Sm_High":8,"Lg_Low":1,"Lg_High":8,"Length_In_Ft":4,"Space_Required":4,"Speed_Factor":7,"AC_2":-3,"AC_3":-2,"AC_4":-2,"AC_5":-1,"AC_6":0,"AC_7":0,"AC_8":1,"AC_9":1,"AC_10":2},
 {"Name":"Bardiche","Cost_in_GP":7,"Weight":125,"Sm_Low":2,"Sm_High":8,"Lg_Low":3,"Lg_High":12,"Length_In_Ft":5,"Space_Required":5,"Speed_Factor":9,"AC_2":-2,"AC_3":-1,"AC_4":0,"AC_5":0,"AC_6":1,"AC_7":1,"AC_8":2,"AC_9":2,"AC_10":3},
@@ -64,6 +65,213 @@ $weapons=[{"Name":"Axe, Battle","Cost_in_GP":5,"Weight":75,"Sm_Low":1,"Sm_High":
 {"Name":"Sword, Two-handed","Cost_in_GP":30,"Weight":250,"Sm_Low":1,"Sm_High":10,"Lg_Low":3,"Lg_High":18,"Length_In_Ft":6,"Space_Required":6,"Speed_Factor":10,"AC_2":2,"AC_3":2,"AC_4":2,"AC_5":2,"AC_6":3,"AC_7":3,"AC_8":3,"AC_9":1,"AC_10":0},
 {"Name":"Trident","Cost_in_GP":4,"Weight":50,"Sm_Low":2,"Sm_High":7,"Lg_Low":3,"Lg_High":12,"Length_In_Ft":4,"Space_Required":1,"Speed_Factor":6,"AC_2":-3,"AC_3":-2,"AC_4":-1,"AC_5":-1,"AC_6":0,"AC_7":0,"AC_8":1,"AC_9":0,"AC_10":1},
 {"Name":"Voulge","Cost_in_GP":2,"Weight":125,"Sm_Low":2,"Sm_High":8,"Lg_Low":2,"Lg_High":8,"Length_In_Ft":8,"Space_Required":2,"Speed_Factor":10,"AC_2":-1,"AC_3":-1,"AC_4":0,"AC_5":1,"AC_6":1,"AC_7":1,"AC_8":0,"AC_9":0,"AC_10":0}];
+$fighter_attack_table=[{"AC":-10,"LV_0":26,"LV_1":25,"LV_2":25,"LV_3":23,"LV_4":23,"LV_5":21,"LV_6":21,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":20,"LV_12":20,"LV_13":18,"LV_14":18,"LV_15":16,"LV_16":16,"LV_17":14,"LV_18":14,"LV_19":14,"LV_20":14,"LV_21":14},
+{"AC":-9,"LV_0":25,"LV_1":24,"LV_2":24,"LV_3":22,"LV_4":22,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":19,"LV_12":19,"LV_13":17,"LV_14":17,"LV_15":15,"LV_16":15,"LV_17":13,"LV_18":13,"LV_19":13,"LV_20":13,"LV_21":13},
+{"AC":-8,"LV_0":24,"LV_1":23,"LV_2":23,"LV_3":21,"LV_4":21,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":18,"LV_12":18,"LV_13":16,"LV_14":16,"LV_15":14,"LV_16":14,"LV_17":12,"LV_18":12,"LV_19":12,"LV_20":12,"LV_21":12},
+{"AC":-7,"LV_0":23,"LV_1":22,"LV_2":22,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":19,"LV_10":19,"LV_11":17,"LV_12":17,"LV_13":15,"LV_14":15,"LV_15":13,"LV_16":13,"LV_17":11,"LV_18":11,"LV_19":11,"LV_20":11,"LV_21":11},
+{"AC":-6,"LV_0":22,"LV_1":21,"LV_2":21,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":18,"LV_10":18,"LV_11":16,"LV_12":16,"LV_13":14,"LV_14":14,"LV_15":12,"LV_16":12,"LV_17":10,"LV_18":10,"LV_19":10,"LV_20":10,"LV_21":10},
+{"AC":-5,"LV_0":21,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":19,"LV_8":19,"LV_9":17,"LV_10":17,"LV_11":15,"LV_12":15,"LV_13":13,"LV_14":13,"LV_15":11,"LV_16":11,"LV_17":9,"LV_18":9,"LV_19":9,"LV_20":9,"LV_21":9},
+{"AC":-4,"LV_0":20,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":18,"LV_8":18,"LV_9":16,"LV_10":16,"LV_11":14,"LV_12":14,"LV_13":12,"LV_14":12,"LV_15":10,"LV_16":10,"LV_17":8,"LV_18":8,"LV_19":8,"LV_20":8,"LV_21":8},
+{"AC":-3,"LV_0":20,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":19,"LV_6":19,"LV_7":17,"LV_8":17,"LV_9":15,"LV_10":15,"LV_11":13,"LV_12":13,"LV_13":11,"LV_14":11,"LV_15":9,"LV_16":9,"LV_17":7,"LV_18":7,"LV_19":7,"LV_20":7,"LV_21":7},
+{"AC":-2,"LV_0":20,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":18,"LV_6":18,"LV_7":16,"LV_8":16,"LV_9":14,"LV_10":14,"LV_11":12,"LV_12":12,"LV_13":10,"LV_14":10,"LV_15":8,"LV_16":8,"LV_17":6,"LV_18":6,"LV_19":6,"LV_20":6,"LV_21":6},
+{"AC":-1,"LV_0":20,"LV_1":20,"LV_2":20,"LV_3":19,"LV_4":19,"LV_5":17,"LV_6":17,"LV_7":15,"LV_8":15,"LV_9":13,"LV_10":13,"LV_11":11,"LV_12":11,"LV_13":9,"LV_14":9,"LV_15":7,"LV_16":7,"LV_17":5,"LV_18":5,"LV_19":5,"LV_20":5,"LV_21":5},
+{"AC":0,"LV_0":20,"LV_1":20,"LV_2":20,"LV_3":18,"LV_4":18,"LV_5":16,"LV_6":16,"LV_7":14,"LV_8":14,"LV_9":12,"LV_10":12,"LV_11":10,"LV_12":10,"LV_13":8,"LV_14":8,"LV_15":6,"LV_16":6,"LV_17":4,"LV_18":4,"LV_19":4,"LV_20":4,"LV_21":4},
+{"AC":1,"LV_0":20,"LV_1":19,"LV_2":19,"LV_3":17,"LV_4":17,"LV_5":15,"LV_6":15,"LV_7":13,"LV_8":13,"LV_9":11,"LV_10":11,"LV_11":9,"LV_12":9,"LV_13":7,"LV_14":7,"LV_15":5,"LV_16":5,"LV_17":3,"LV_18":3,"LV_19":3,"LV_20":3,"LV_21":3},
+{"AC":2,"LV_0":19,"LV_1":18,"LV_2":18,"LV_3":16,"LV_4":16,"LV_5":14,"LV_6":14,"LV_7":12,"LV_8":12,"LV_9":10,"LV_10":10,"LV_11":8,"LV_12":8,"LV_13":6,"LV_14":6,"LV_15":4,"LV_16":4,"LV_17":2,"LV_18":2,"LV_19":2,"LV_20":2,"LV_21":2},
+{"AC":3,"LV_0":18,"LV_1":17,"LV_2":17,"LV_3":15,"LV_4":15,"LV_5":13,"LV_6":13,"LV_7":11,"LV_8":11,"LV_9":9,"LV_10":9,"LV_11":7,"LV_12":7,"LV_13":5,"LV_14":5,"LV_15":3,"LV_16":3,"LV_17":1,"LV_18":1,"LV_19":1,"LV_20":1,"LV_21":1},
+{"AC":4,"LV_0":17,"LV_1":16,"LV_2":16,"LV_3":14,"LV_4":14,"LV_5":12,"LV_6":12,"LV_7":10,"LV_8":10,"LV_9":8,"LV_10":8,"LV_11":6,"LV_12":6,"LV_13":4,"LV_14":4,"LV_15":2,"LV_16":2,"LV_17":0,"LV_18":0,"LV_19":0,"LV_20":0,"LV_21":0},
+{"AC":5,"LV_0":16,"LV_1":15,"LV_2":15,"LV_3":13,"LV_4":13,"LV_5":11,"LV_6":11,"LV_7":9,"LV_8":9,"LV_9":7,"LV_10":7,"LV_11":5,"LV_12":5,"LV_13":3,"LV_14":3,"LV_15":1,"LV_16":1,"LV_17":-1,"LV_18":-1,"LV_19":-1,"LV_20":-1,"LV_21":-1},
+{"AC":6,"LV_0":15,"LV_1":14,"LV_2":14,"LV_3":12,"LV_4":12,"LV_5":10,"LV_6":10,"LV_7":8,"LV_8":8,"LV_9":6,"LV_10":6,"LV_11":4,"LV_12":4,"LV_13":2,"LV_14":2,"LV_15":0,"LV_16":0,"LV_17":-2,"LV_18":-2,"LV_19":-2,"LV_20":-2,"LV_21":-2},
+{"AC":7,"LV_0":14,"LV_1":13,"LV_2":13,"LV_3":11,"LV_4":11,"LV_5":9,"LV_6":9,"LV_7":7,"LV_8":7,"LV_9":5,"LV_10":5,"LV_11":3,"LV_12":3,"LV_13":1,"LV_14":1,"LV_15":-1,"LV_16":-1,"LV_17":-3,"LV_18":-3,"LV_19":-3,"LV_20":-3,"LV_21":-3},
+{"AC":8,"LV_0":13,"LV_1":12,"LV_2":12,"LV_3":10,"LV_4":10,"LV_5":8,"LV_6":8,"LV_7":6,"LV_8":6,"LV_9":4,"LV_10":4,"LV_11":2,"LV_12":2,"LV_13":0,"LV_14":0,"LV_15":-2,"LV_16":-2,"LV_17":-4,"LV_18":-4,"LV_19":-4,"LV_20":-4,"LV_21":-4},
+{"AC":9,"LV_0":12,"LV_1":11,"LV_2":11,"LV_3":9,"LV_4":9,"LV_5":7,"LV_6":7,"LV_7":5,"LV_8":5,"LV_9":3,"LV_10":3,"LV_11":1,"LV_12":1,"LV_13":-1,"LV_14":-1,"LV_15":-3,"LV_16":-3,"LV_17":-5,"LV_18":-5,"LV_19":-5,"LV_20":-5,"LV_21":-5},
+{"AC":10,"LV_0":11,"LV_1":10,"LV_2":10,"LV_3":8,"LV_4":8,"LV_5":6,"LV_6":6,"LV_7":4,"LV_8":4,"LV_9":2,"LV_10":2,"LV_11":0,"LV_12":0,"LV_13":-2,"LV_14":-2,"LV_15":-4,"LV_16":-4,"LV_17":-6,"LV_18":-6,"LV_19":-6,"LV_20":-6,"LV_21":-6}];
+$cleric_attack_table=[{"AC":-10,"LV_1":25,"LV_2":25,"LV_3":25,"LV_4":23,"LV_5":23,"LV_6":23,"LV_7":21,"LV_8":21,"LV_9":21,"LV_10":20,"LV_11":20,"LV_12":20,"LV_13":20,"LV_14":20,"LV_15":20,"LV_16":20,"LV_17":20,"LV_18":20,"LV_19":19,"LV_20":19,"LV_21":19},
+{"AC":-9,"LV_1":24,"LV_2":24,"LV_3":24,"LV_4":22,"LV_5":22,"LV_6":22,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":20,"LV_12":20,"LV_13":20,"LV_14":20,"LV_15":20,"LV_16":19,"LV_17":19,"LV_18":19,"LV_19":18,"LV_20":18,"LV_21":18},
+{"AC":-8,"LV_1":23,"LV_2":23,"LV_3":23,"LV_4":21,"LV_5":21,"LV_6":21,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":20,"LV_12":20,"LV_13":20,"LV_14":20,"LV_15":20,"LV_16":18,"LV_17":18,"LV_18":18,"LV_19":17,"LV_20":17,"LV_21":17},
+{"AC":-7,"LV_1":22,"LV_2":22,"LV_3":22,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":20,"LV_12":20,"LV_13":19,"LV_14":19,"LV_15":19,"LV_16":17,"LV_17":17,"LV_18":17,"LV_19":16,"LV_20":16,"LV_21":16},
+{"AC":-6,"LV_1":21,"LV_2":21,"LV_3":21,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":20,"LV_12":20,"LV_13":18,"LV_14":18,"LV_15":18,"LV_16":16,"LV_17":16,"LV_18":16,"LV_19":15,"LV_20":15,"LV_21":15},
+{"AC":-5,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":19,"LV_11":19,"LV_12":19,"LV_13":17,"LV_14":17,"LV_15":17,"LV_16":15,"LV_17":15,"LV_18":15,"LV_19":14,"LV_20":14,"LV_21":14},
+{"AC":-4,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":18,"LV_11":18,"LV_12":18,"LV_13":16,"LV_14":16,"LV_15":16,"LV_16":14,"LV_17":14,"LV_18":14,"LV_19":13,"LV_20":13,"LV_21":13},
+{"AC":-3,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":19,"LV_8":19,"LV_9":19,"LV_10":17,"LV_11":17,"LV_12":17,"LV_13":15,"LV_14":15,"LV_15":15,"LV_16":13,"LV_17":13,"LV_18":13,"LV_19":12,"LV_20":12,"LV_21":12},
+{"AC":-2,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":18,"LV_8":18,"LV_9":18,"LV_10":16,"LV_11":16,"LV_12":16,"LV_13":14,"LV_14":14,"LV_15":14,"LV_16":12,"LV_17":12,"LV_18":12,"LV_19":11,"LV_20":11,"LV_21":11},
+{"AC":-1,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":19,"LV_5":19,"LV_6":19,"LV_7":17,"LV_8":17,"LV_9":17,"LV_10":15,"LV_11":15,"LV_12":15,"LV_13":13,"LV_14":13,"LV_15":13,"LV_16":11,"LV_17":11,"LV_18":11,"LV_19":10,"LV_20":10,"LV_21":10},
+{"AC":0,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":18,"LV_5":18,"LV_6":18,"LV_7":16,"LV_8":16,"LV_9":16,"LV_10":14,"LV_11":14,"LV_12":14,"LV_13":12,"LV_14":12,"LV_15":12,"LV_16":10,"LV_17":10,"LV_18":10,"LV_19":9,"LV_20":9,"LV_21":9},
+{"AC":1,"LV_1":19,"LV_2":19,"LV_3":19,"LV_4":17,"LV_5":17,"LV_6":17,"LV_7":15,"LV_8":15,"LV_9":15,"LV_10":13,"LV_11":13,"LV_12":13,"LV_13":11,"LV_14":11,"LV_15":11,"LV_16":9,"LV_17":9,"LV_18":9,"LV_19":8,"LV_20":8,"LV_21":8},
+{"AC":2,"LV_1":18,"LV_2":18,"LV_3":18,"LV_4":16,"LV_5":16,"LV_6":16,"LV_7":14,"LV_8":14,"LV_9":14,"LV_10":12,"LV_11":12,"LV_12":12,"LV_13":10,"LV_14":10,"LV_15":10,"LV_16":8,"LV_17":8,"LV_18":8,"LV_19":7,"LV_20":7,"LV_21":7},
+{"AC":3,"LV_1":17,"LV_2":17,"LV_3":17,"LV_4":15,"LV_5":15,"LV_6":15,"LV_7":13,"LV_8":13,"LV_9":13,"LV_10":11,"LV_11":11,"LV_12":11,"LV_13":9,"LV_14":9,"LV_15":9,"LV_16":7,"LV_17":7,"LV_18":7,"LV_19":6,"LV_20":6,"LV_21":6},
+{"AC":4,"LV_1":16,"LV_2":16,"LV_3":16,"LV_4":14,"LV_5":14,"LV_6":14,"LV_7":12,"LV_8":12,"LV_9":12,"LV_10":10,"LV_11":10,"LV_12":10,"LV_13":8,"LV_14":8,"LV_15":8,"LV_16":6,"LV_17":6,"LV_18":6,"LV_19":5,"LV_20":5,"LV_21":5},
+{"AC":5,"LV_1":15,"LV_2":15,"LV_3":15,"LV_4":13,"LV_5":13,"LV_6":13,"LV_7":11,"LV_8":11,"LV_9":11,"LV_10":9,"LV_11":9,"LV_12":9,"LV_13":7,"LV_14":7,"LV_15":7,"LV_16":5,"LV_17":5,"LV_18":5,"LV_19":4,"LV_20":4,"LV_21":4},
+{"AC":6,"LV_1":14,"LV_2":14,"LV_3":14,"LV_4":12,"LV_5":12,"LV_6":12,"LV_7":10,"LV_8":10,"LV_9":10,"LV_10":8,"LV_11":8,"LV_12":8,"LV_13":6,"LV_14":6,"LV_15":6,"LV_16":4,"LV_17":4,"LV_18":4,"LV_19":3,"LV_20":3,"LV_21":3},
+{"AC":7,"LV_1":13,"LV_2":13,"LV_3":13,"LV_4":11,"LV_5":11,"LV_6":11,"LV_7":9,"LV_8":9,"LV_9":9,"LV_10":7,"LV_11":7,"LV_12":7,"LV_13":5,"LV_14":5,"LV_15":5,"LV_16":3,"LV_17":3,"LV_18":3,"LV_19":2,"LV_20":2,"LV_21":2},
+{"AC":8,"LV_1":12,"LV_2":12,"LV_3":12,"LV_4":10,"LV_5":10,"LV_6":10,"LV_7":8,"LV_8":8,"LV_9":8,"LV_10":6,"LV_11":6,"LV_12":6,"LV_13":4,"LV_14":4,"LV_15":4,"LV_16":2,"LV_17":2,"LV_18":2,"LV_19":1,"LV_20":1,"LV_21":1},
+{"AC":9,"LV_1":11,"LV_2":11,"LV_3":11,"LV_4":9,"LV_5":9,"LV_6":9,"LV_7":7,"LV_8":7,"LV_9":7,"LV_10":5,"LV_11":5,"LV_12":5,"LV_13":3,"LV_14":3,"LV_15":3,"LV_16":1,"LV_17":1,"LV_18":1,"LV_19":0,"LV_20":0,"LV_21":0},
+{"AC":10,"LV_1":10,"LV_2":10,"LV_3":10,"LV_4":8,"LV_5":8,"LV_6":8,"LV_7":6,"LV_8":6,"LV_9":6,"LV_10":4,"LV_11":4,"LV_12":4,"LV_13":2,"LV_14":2,"LV_15":2,"LV_16":0,"LV_17":0,"LV_18":0,"LV_19":-1,"LV_20":-1,"LV_21":-1}];
+$magic_user_attack_table=[{"AC":-10,"LV_1":26,"LV_2":26,"LV_3":26,"LV_4":26,"LV_5":26,"LV_6":24,"LV_7":24,"LV_8":24,"LV_9":24,"LV_10":24,"LV_11":21,"LV_12":21,"LV_13":21,"LV_14":21,"LV_15":21,"LV_16":20,"LV_17":20,"LV_18":20,"LV_19":20,"LV_20":20,"LV_21":20},
+{"AC":-9,"LV_1":25,"LV_2":25,"LV_3":25,"LV_4":25,"LV_5":25,"LV_6":23,"LV_7":23,"LV_8":23,"LV_9":23,"LV_10":23,"LV_11":20,"LV_12":20,"LV_13":20,"LV_14":20,"LV_15":20,"LV_16":20,"LV_17":20,"LV_18":20,"LV_19":20,"LV_20":20,"LV_21":20},
+{"AC":-8,"LV_1":24,"LV_2":24,"LV_3":24,"LV_4":24,"LV_5":24,"LV_6":22,"LV_7":22,"LV_8":22,"LV_9":22,"LV_10":22,"LV_11":20,"LV_12":20,"LV_13":20,"LV_14":20,"LV_15":20,"LV_16":20,"LV_17":20,"LV_18":20,"LV_19":20,"LV_20":20,"LV_21":19},
+{"AC":-7,"LV_1":23,"LV_2":23,"LV_3":23,"LV_4":23,"LV_5":23,"LV_6":21,"LV_7":21,"LV_8":21,"LV_9":21,"LV_10":21,"LV_11":20,"LV_12":20,"LV_13":20,"LV_14":20,"LV_15":20,"LV_16":20,"LV_17":20,"LV_18":20,"LV_19":20,"LV_20":20,"LV_21":18},
+{"AC":-6,"LV_1":22,"LV_2":22,"LV_3":22,"LV_4":22,"LV_5":22,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":20,"LV_12":20,"LV_13":20,"LV_14":20,"LV_15":20,"LV_16":19,"LV_17":19,"LV_18":19,"LV_19":19,"LV_20":19,"LV_21":17},
+{"AC":-5,"LV_1":21,"LV_2":21,"LV_3":21,"LV_4":21,"LV_5":21,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":20,"LV_12":20,"LV_13":20,"LV_14":20,"LV_15":20,"LV_16":18,"LV_17":18,"LV_18":18,"LV_19":18,"LV_20":18,"LV_21":16},
+{"AC":-4,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":20,"LV_12":20,"LV_13":20,"LV_14":20,"LV_15":20,"LV_16":17,"LV_17":17,"LV_18":17,"LV_19":17,"LV_20":17,"LV_21":15},
+{"AC":-3,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":19,"LV_12":19,"LV_13":19,"LV_14":19,"LV_15":19,"LV_16":16,"LV_17":16,"LV_18":16,"LV_19":16,"LV_20":16,"LV_21":14},
+{"AC":-2,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":18,"LV_12":18,"LV_13":18,"LV_14":18,"LV_15":18,"LV_16":15,"LV_17":15,"LV_18":15,"LV_19":15,"LV_20":15,"LV_21":13},
+{"AC":-1,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":17,"LV_12":17,"LV_13":17,"LV_14":17,"LV_15":17,"LV_16":14,"LV_17":14,"LV_18":14,"LV_19":14,"LV_20":14,"LV_21":12},
+{"AC":0,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":19,"LV_7":19,"LV_8":19,"LV_9":19,"LV_10":19,"LV_11":16,"LV_12":16,"LV_13":16,"LV_14":16,"LV_15":16,"LV_16":13,"LV_17":13,"LV_18":13,"LV_19":13,"LV_20":13,"LV_21":11},
+{"AC":1,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":18,"LV_7":18,"LV_8":18,"LV_9":18,"LV_10":18,"LV_11":15,"LV_12":15,"LV_13":15,"LV_14":15,"LV_15":15,"LV_16":12,"LV_17":12,"LV_18":12,"LV_19":12,"LV_20":12,"LV_21":10},
+{"AC":2,"LV_1":19,"LV_2":19,"LV_3":19,"LV_4":19,"LV_5":19,"LV_6":17,"LV_7":17,"LV_8":17,"LV_9":17,"LV_10":17,"LV_11":14,"LV_12":14,"LV_13":14,"LV_14":14,"LV_15":14,"LV_16":11,"LV_17":11,"LV_18":11,"LV_19":11,"LV_20":11,"LV_21":9},
+{"AC":3,"LV_1":18,"LV_2":18,"LV_3":18,"LV_4":18,"LV_5":18,"LV_6":16,"LV_7":16,"LV_8":16,"LV_9":16,"LV_10":16,"LV_11":13,"LV_12":13,"LV_13":13,"LV_14":13,"LV_15":13,"LV_16":10,"LV_17":10,"LV_18":10,"LV_19":10,"LV_20":10,"LV_21":8},
+{"AC":4,"LV_1":17,"LV_2":17,"LV_3":17,"LV_4":17,"LV_5":17,"LV_6":15,"LV_7":15,"LV_8":15,"LV_9":15,"LV_10":15,"LV_11":12,"LV_12":12,"LV_13":12,"LV_14":12,"LV_15":12,"LV_16":9,"LV_17":9,"LV_18":9,"LV_19":9,"LV_20":9,"LV_21":7},
+{"AC":5,"LV_1":16,"LV_2":16,"LV_3":16,"LV_4":16,"LV_5":16,"LV_6":14,"LV_7":14,"LV_8":14,"LV_9":14,"LV_10":14,"LV_11":11,"LV_12":11,"LV_13":11,"LV_14":11,"LV_15":11,"LV_16":8,"LV_17":8,"LV_18":8,"LV_19":8,"LV_20":8,"LV_21":6},
+{"AC":6,"LV_1":15,"LV_2":15,"LV_3":15,"LV_4":15,"LV_5":15,"LV_6":13,"LV_7":13,"LV_8":13,"LV_9":13,"LV_10":13,"LV_11":10,"LV_12":10,"LV_13":10,"LV_14":10,"LV_15":10,"LV_16":7,"LV_17":7,"LV_18":7,"LV_19":7,"LV_20":7,"LV_21":5},
+{"AC":7,"LV_1":14,"LV_2":14,"LV_3":14,"LV_4":14,"LV_5":14,"LV_6":12,"LV_7":12,"LV_8":12,"LV_9":12,"LV_10":12,"LV_11":9,"LV_12":9,"LV_13":9,"LV_14":9,"LV_15":9,"LV_16":6,"LV_17":6,"LV_18":6,"LV_19":6,"LV_20":6,"LV_21":4},
+{"AC":8,"LV_1":13,"LV_2":13,"LV_3":13,"LV_4":13,"LV_5":13,"LV_6":11,"LV_7":11,"LV_8":11,"LV_9":11,"LV_10":11,"LV_11":8,"LV_12":8,"LV_13":8,"LV_14":8,"LV_15":8,"LV_16":5,"LV_17":5,"LV_18":5,"LV_19":5,"LV_20":5,"LV_21":3},
+{"AC":9,"LV_1":12,"LV_2":12,"LV_3":12,"LV_4":12,"LV_5":12,"LV_6":10,"LV_7":10,"LV_8":10,"LV_9":10,"LV_10":10,"LV_11":7,"LV_12":7,"LV_13":7,"LV_14":7,"LV_15":7,"LV_16":4,"LV_17":4,"LV_18":4,"LV_19":4,"LV_20":4,"LV_21":2},
+{"AC":10,"LV_1":11,"LV_2":11,"LV_3":11,"LV_4":11,"LV_5":11,"LV_6":9,"LV_7":9,"LV_8":9,"LV_9":9,"LV_10":9,"LV_11":6,"LV_12":6,"LV_13":6,"LV_14":6,"LV_15":6,"LV_16":3,"LV_17":3,"LV_18":3,"LV_19":3,"LV_20":3,"LV_21":1}];
+$thief_attack_table=[{"AC":-10,"LV_1":26,"LV_2":26,"LV_3":26,"LV_4":26,"LV_5":24,"LV_6":24,"LV_7":24,"LV_8":24,"LV_9":21,"LV_10":21,"LV_11":21,"LV_12":21,"LV_13":20,"LV_14":20,"LV_15":20,"LV_16":20,"LV_17":20,"LV_18":20,"LV_19":20,"LV_20":20,"LV_21":20},
+{"AC":-9,"LV_1":25,"LV_2":25,"LV_3":25,"LV_4":25,"LV_5":23,"LV_6":23,"LV_7":23,"LV_8":23,"LV_9":20,"LV_10":20,"LV_11":20,"LV_12":20,"LV_13":20,"LV_14":20,"LV_15":20,"LV_16":20,"LV_17":20,"LV_18":20,"LV_19":20,"LV_20":20,"LV_21":19},
+{"AC":-8,"LV_1":24,"LV_2":24,"LV_3":24,"LV_4":24,"LV_5":22,"LV_6":22,"LV_7":22,"LV_8":22,"LV_9":20,"LV_10":20,"LV_11":20,"LV_12":20,"LV_13":20,"LV_14":20,"LV_15":20,"LV_16":20,"LV_17":20,"LV_18":20,"LV_19":20,"LV_20":20,"LV_21":18},
+{"AC":-7,"LV_1":23,"LV_2":23,"LV_3":23,"LV_4":23,"LV_5":21,"LV_6":21,"LV_7":21,"LV_8":21,"LV_9":20,"LV_10":20,"LV_11":20,"LV_12":20,"LV_13":20,"LV_14":20,"LV_15":20,"LV_16":20,"LV_17":19,"LV_18":19,"LV_19":19,"LV_20":19,"LV_21":17},
+{"AC":-6,"LV_1":22,"LV_2":22,"LV_3":22,"LV_4":22,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":20,"LV_12":20,"LV_13":20,"LV_14":20,"LV_15":20,"LV_16":20,"LV_17":18,"LV_18":18,"LV_19":18,"LV_20":18,"LV_21":16},
+{"AC":-5,"LV_1":21,"LV_2":21,"LV_3":21,"LV_4":21,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":20,"LV_12":20,"LV_13":19,"LV_14":19,"LV_15":19,"LV_16":19,"LV_17":17,"LV_18":17,"LV_19":17,"LV_20":17,"LV_21":15},
+{"AC":-4,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":20,"LV_10":20,"LV_11":20,"LV_12":20,"LV_13":18,"LV_14":18,"LV_15":18,"LV_16":18,"LV_17":16,"LV_18":16,"LV_19":16,"LV_20":16,"LV_21":14},
+{"AC":-3,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":19,"LV_10":19,"LV_11":19,"LV_12":19,"LV_13":17,"LV_14":17,"LV_15":17,"LV_16":17,"LV_17":15,"LV_18":15,"LV_19":15,"LV_20":15,"LV_21":13},
+{"AC":-2,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":18,"LV_10":18,"LV_11":18,"LV_12":18,"LV_13":16,"LV_14":16,"LV_15":16,"LV_16":16,"LV_17":14,"LV_18":14,"LV_19":14,"LV_20":14,"LV_21":12},
+{"AC":-1,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":20,"LV_6":20,"LV_7":20,"LV_8":20,"LV_9":17,"LV_10":17,"LV_11":17,"LV_12":17,"LV_13":15,"LV_14":15,"LV_15":15,"LV_16":15,"LV_17":13,"LV_18":13,"LV_19":13,"LV_20":13,"LV_21":11},
+{"AC":0,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":19,"LV_6":19,"LV_7":19,"LV_8":19,"LV_9":16,"LV_10":16,"LV_11":16,"LV_12":16,"LV_13":14,"LV_14":14,"LV_15":14,"LV_16":14,"LV_17":12,"LV_18":12,"LV_19":12,"LV_20":12,"LV_21":10},
+{"AC":1,"LV_1":20,"LV_2":20,"LV_3":20,"LV_4":20,"LV_5":18,"LV_6":18,"LV_7":18,"LV_8":18,"LV_9":15,"LV_10":15,"LV_11":15,"LV_12":15,"LV_13":13,"LV_14":13,"LV_15":13,"LV_16":13,"LV_17":11,"LV_18":11,"LV_19":11,"LV_20":11,"LV_21":9},
+{"AC":2,"LV_1":19,"LV_2":19,"LV_3":19,"LV_4":19,"LV_5":17,"LV_6":17,"LV_7":17,"LV_8":17,"LV_9":14,"LV_10":14,"LV_11":14,"LV_12":14,"LV_13":12,"LV_14":12,"LV_15":12,"LV_16":12,"LV_17":10,"LV_18":10,"LV_19":10,"LV_20":10,"LV_21":8},
+{"AC":3,"LV_1":18,"LV_2":18,"LV_3":18,"LV_4":18,"LV_5":16,"LV_6":16,"LV_7":16,"LV_8":16,"LV_9":13,"LV_10":13,"LV_11":13,"LV_12":13,"LV_13":11,"LV_14":11,"LV_15":11,"LV_16":11,"LV_17":9,"LV_18":9,"LV_19":9,"LV_20":9,"LV_21":7},
+{"AC":4,"LV_1":17,"LV_2":17,"LV_3":17,"LV_4":17,"LV_5":15,"LV_6":15,"LV_7":15,"LV_8":15,"LV_9":12,"LV_10":12,"LV_11":12,"LV_12":12,"LV_13":10,"LV_14":10,"LV_15":10,"LV_16":10,"LV_17":8,"LV_18":8,"LV_19":8,"LV_20":8,"LV_21":6},
+{"AC":5,"LV_1":16,"LV_2":16,"LV_3":16,"LV_4":16,"LV_5":14,"LV_6":14,"LV_7":14,"LV_8":14,"LV_9":11,"LV_10":11,"LV_11":11,"LV_12":11,"LV_13":9,"LV_14":9,"LV_15":9,"LV_16":9,"LV_17":7,"LV_18":7,"LV_19":7,"LV_20":7,"LV_21":5},
+{"AC":6,"LV_1":15,"LV_2":15,"LV_3":15,"LV_4":15,"LV_5":13,"LV_6":13,"LV_7":13,"LV_8":13,"LV_9":10,"LV_10":10,"LV_11":10,"LV_12":10,"LV_13":8,"LV_14":8,"LV_15":8,"LV_16":8,"LV_17":6,"LV_18":6,"LV_19":6,"LV_20":6,"LV_21":4},
+{"AC":7,"LV_1":14,"LV_2":14,"LV_3":14,"LV_4":14,"LV_5":12,"LV_6":12,"LV_7":12,"LV_8":12,"LV_9":9,"LV_10":9,"LV_11":9,"LV_12":9,"LV_13":7,"LV_14":7,"LV_15":7,"LV_16":7,"LV_17":5,"LV_18":5,"LV_19":5,"LV_20":5,"LV_21":3},
+{"AC":8,"LV_1":13,"LV_2":13,"LV_3":13,"LV_4":13,"LV_5":11,"LV_6":11,"LV_7":11,"LV_8":11,"LV_9":8,"LV_10":8,"LV_11":8,"LV_12":8,"LV_13":6,"LV_14":6,"LV_15":6,"LV_16":6,"LV_17":4,"LV_18":4,"LV_19":4,"LV_20":4,"LV_21":2},
+{"AC":9,"LV_1":12,"LV_2":12,"LV_3":12,"LV_4":12,"LV_5":10,"LV_6":10,"LV_7":10,"LV_8":10,"LV_9":7,"LV_10":7,"LV_11":7,"LV_12":7,"LV_13":5,"LV_14":5,"LV_15":5,"LV_16":5,"LV_17":3,"LV_18":3,"LV_19":3,"LV_20":3,"LV_21":1},
+{"AC":10,"LV_1":11,"LV_2":11,"LV_3":11,"LV_4":11,"LV_5":9,"LV_6":9,"LV_7":9,"LV_8":9,"LV_9":6,"LV_10":6,"LV_11":6,"LV_12":6,"LV_13":4,"LV_14":4,"LV_15":4,"LV_16":4,"LV_17":2,"LV_18":2,"LV_19":2,"LV_20":2,"LV_21":0}];
+$monsters=[{"name":"aerial servant","frequency":"V","frequency_percent":"3%","number_appearing":"1","armor_class":3,"move_land":null,"move_fly":24,"move_swim":null,"move_misc":null,"MC":"A","hit_dice":"16","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"8-32","special_attacks":"surprise 1-4","special_defense":"+1 to hit","magic_resistance":"0%","Intelligence":"semi","IQ":3,"alignment":"N","size":"L","psionics":0,"book":"M","page":6,"thac0":7,"xp_base":5250,"xp_plus":20},
+{"name":"ant, giant","frequency":"R","frequency_percent":"7%","number_appearing":"d100","armor_class":3,"move_land":18,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"2","chance_in_lair":"10%","treasure_type":"Qx3,S","number_of_attacks":1,"damage_per_attack":"1-6","special_attacks":"poison sting","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"S","psionics":0,"book":"M","page":7,"thac0":16,"xp_base":20,"xp_plus":2},
+{"name":"baboon","frequency":"C","frequency_percent":"65%","number_appearing":"d4x10","armor_class":7,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"1+1","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-4","special_attacks":"","special_defense":"climbing","magic_resistance":"0%","Intelligence":"low","IQ":6,"alignment":"N","size":"S","psionics":0,"book":"M","page":8,"thac0":18,"xp_base":20,"xp_plus":2},
+{"name":"basilisk","frequency":"U","frequency_percent":"20%","number_appearing":"d4","armor_class":4,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"6+1","chance_in_lair":"40%","treasure_type":"F","number_of_attacks":1,"damage_per_attack":"1-10","special_attacks":"petrify gaze","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"M","psionics":0,"book":"M","page":8,"thac0":13,"xp_base":1000,"xp_plus":8},
+{"name":"beaver, giant","frequency":"V","frequency_percent":"3%","number_appearing":"d4x10","armor_class":6,"move_land":6,"move_fly":null,"move_swim":12,"move_misc":null,"MC":null,"hit_dice":"4","chance_in_lair":"80%","treasure_type":"C","number_of_attacks":1,"damage_per_attack":"4-16","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"low-ave","IQ":7,"alignment":"N","size":"M","psionics":0,"book":"M","page":9,"thac0":15,"xp_base":60,"xp_plus":4},
+{"name":"beetle, giant bombardier","frequency":"C","frequency_percent":"65%","number_appearing":"3d4","armor_class":4,"move_land":9,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"2+2","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-12","special_attacks":"acid cloud","special_defense":"firing cloud","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"M","psionics":0,"book":"M","page":9,"thac0":16,"xp_base":105,"xp_plus":3},
+{"name":"beetle, giant boring","frequency":"C","frequency_percent":"65%","number_appearing":"3d6","armor_class":3,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"5","chance_in_lair":"40%","treasure_type":"C,R,S,T","number_of_attacks":1,"damage_per_attack":"5-20","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"L","psionics":0,"book":"M","page":9,"thac0":15,"xp_base":90,"xp_plus":5},
+{"name":"beetle, giant fire","frequency":"C","frequency_percent":"65%","number_appearing":"3d4","armor_class":4,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"1+2","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-8","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"S","psionics":0,"book":"M","page":9,"thac0":18,"xp_base":20,"xp_plus":2},
+{"name":"beetle, giant water","frequency":"C","frequency_percent":"65%","number_appearing":"d12","armor_class":3,"move_land":3,"move_fly":null,"move_swim":12,"move_misc":null,"MC":null,"hit_dice":"4","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-18","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":9,"thac0":15,"xp_base":85,"xp_plus":4},
+{"name":"blink dog","frequency":"R","frequency_percent":"7%","number_appearing":"4d4","armor_class":5,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"4","chance_in_lair":"20%","treasure_type":"C","number_of_attacks":1,"damage_per_attack":"1-6","special_attacks":"75% rear attack","special_defense":"teleporting","magic_resistance":"0%","Intelligence":"average","IQ":9,"alignment":"LG","size":"M","psionics":0,"book":"M","page":10,"thac0":15,"xp_base":170,"xp_plus":5},
+{"name":"boar, giant","frequency":"U","frequency_percent":"20%","number_appearing":"2d4","armor_class":6,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"7","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-18","special_attacks":"","special_defense":"fight at -10 hp","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"L","psionics":0,"book":"M","page":11,"thac0":13,"xp_base":255,"xp_plus":8},
+{"name":"boar, wild","frequency":"C","frequency_percent":"65%","number_appearing":"d12","armor_class":7,"move_land":15,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"3+3","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-12","special_attacks":"","special_defense":"fight at -7 hp","magic_resistance":"0%","Intelligence":"semi","IQ":3,"alignment":"N","size":"M","psionics":0,"book":"M","page":11,"thac0":16,"xp_base":85,"xp_plus":4},
+{"name":"bugbear","frequency":"U","frequency_percent":"20%","number_appearing":"6d6","armor_class":5,"move_land":9,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"3+1","chance_in_lair":"25%","treasure_type":"J,K/L,M,B","number_of_attacks":1,"damage_per_attack":"by weapon (2-8)","special_attacks":"surprise 1-3","special_defense":"","magic_resistance":"0%","Intelligence":"low-ave","IQ":7,"alignment":"CE","size":"L","psionics":0,"book":"M","page":12,"thac0":16,"xp_base":135,"xp_plus":4},
+{"name":"camel","frequency":"C","frequency_percent":"65%","number_appearing":"d12","armor_class":7,"move_land":21,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"3","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-4","special_attacks":"spitting","special_defense":"","magic_resistance":"0%","Intelligence":"animal-semi","IQ":2,"alignment":"N","size":"L","psionics":0,"book":"M","page":13,"thac0":16,"xp_base":35,"xp_plus":3},
+{"name":"catoblepas","frequency":"V","frequency_percent":"3%","number_appearing":"d3","armor_class":7,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"6+2","chance_in_lair":"60%","treasure_type":"C","number_of_attacks":1,"damage_per_attack":"1-6 & stun","special_attacks":"death gaze","special_defense":"","magic_resistance":"0%","Intelligence":"semi","IQ":3,"alignment":"N","size":"L","psionics":0,"book":"M","page":13,"thac0":13,"xp_base":700,"xp_plus":8},
+{"name":"cockatrice","frequency":"U","frequency_percent":"20%","number_appearing":"d6","armor_class":6,"move_land":6,"move_fly":18,"move_swim":null,"move_misc":null,"MC":"C","hit_dice":"5","chance_in_lair":"30%","treasure_type":"D","number_of_attacks":1,"damage_per_attack":"1-3","special_attacks":"petrify touch","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"S","psionics":0,"book":"M","page":15,"thac0":15,"xp_base":315,"xp_plus":5},
+{"name":"demon, type VI","frequency":"R","frequency_percent":"7%","number_appearing":"d6","armor_class":-2,"move_land":6,"move_fly":15,"move_swim":null,"move_misc":null,"MC":"D","hit_dice":"8+8","chance_in_lair":"20%","treasure_type":"F","number_of_attacks":1,"damage_per_attack":"2-13","special_attacks":"whip and flame ","special_defense":"+1 to hit","magic_resistance":"75%","Intelligence":"high","IQ":13,"alignment":"CE","size":"L","psionics":1,"book":"M","page":19,"thac0":12,"xp_base":3600,"xp_plus":12},
+{"name":"devil, bone","frequency":"U","frequency_percent":"20%","number_appearing":"d8","armor_class":-1,"move_land":15,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"9","chance_in_lair":"55%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-12","special_attacks":"special","special_defense":"special","magic_resistance":"40%","Intelligence":"very","IQ":11,"alignment":"LE","size":"L","psionics":0,"book":"M","page":21,"thac0":12,"xp_base":2800,"xp_plus":12},
+{"name":"devil, erinyes","frequency":"U","frequency_percent":"20%","number_appearing":"d16","armor_class":2,"move_land":6,"move_fly":21,"move_swim":null,"move_misc":null,"MC":"C","hit_dice":"6+6","chance_in_lair":"20%","treasure_type":"R","number_of_attacks":1,"damage_per_attack":"2-8","special_attacks":"special","special_defense":"special","magic_resistance":"30%","Intelligence":"average","IQ":9,"alignment":"LE","size":"M","psionics":0,"book":"M","page":22,"thac0":13,"xp_base":875,"xp_plus":8},
+{"name":"devil, lemure","frequency":"C","frequency_percent":"65%","number_appearing":"5d6","armor_class":7,"move_land":3,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"3","chance_in_lair":"100%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-3","special_attacks":"","special_defense":"special","magic_resistance":"0%","Intelligence":"semi","IQ":3,"alignment":"LE","size":"M","psionics":0,"book":"M","page":23,"thac0":16,"xp_base":65,"xp_plus":3},
+{"name":"dinosaur, anatosaurus","frequency":"C","frequency_percent":"65%","number_appearing":"2d6","armor_class":5,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"12","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-4","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":23,"thac0":9,"xp_base":1300,"xp_plus":16},
+{"name":"dinosaur, ankylosaurus","frequency":"U","frequency_percent":"20%","number_appearing":"d4+1","armor_class":0,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"9","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-18","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":23,"thac0":12,"xp_base":900,"xp_plus":12},
+{"name":"dinosaur, apatosaurus","frequency":"C","frequency_percent":"65%","number_appearing":"d6","armor_class":5,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"30","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-18","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":24,"thac0":7,"xp_base":5000,"xp_plus":35},
+{"name":"dinosaur, archelon","frequency":"U","frequency_percent":"20%","number_appearing":"d4","armor_class":3,"move_land":3,"move_fly":null,"move_swim":15,"move_misc":null,"MC":null,"hit_dice":"7","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-12","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":24,"thac0":13,"xp_base":225,"xp_plus":8},
+{"name":"dinosaur, brachiosaurus","frequency":"U","frequency_percent":"20%","number_appearing":"d6","armor_class":5,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"36","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"5-20","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":24,"thac0":7,"xp_base":5000,"xp_plus":35},
+{"name":"dinosaur, camarasaurus","frequency":"C","frequency_percent":"65%","number_appearing":"2d4","armor_class":6,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"20","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-12","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":24,"thac0":7,"xp_base":4000,"xp_plus":30},
+{"name":"dinosaur, cetiosaurus","frequency":"U","frequency_percent":"20%","number_appearing":"d4","armor_class":6,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"24","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-18","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":25,"thac0":12,"xp_base":5000,"xp_plus":35},
+{"name":"dinosaur, dinichtys","frequency":"C","frequency_percent":"65%","number_appearing":"d4","armor_class":7,"move_land":null,"move_fly":null,"move_swim":21,"move_misc":null,"MC":null,"hit_dice":"10","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"5-20","special_attacks":"swallow on 20","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":25,"thac0":10,"xp_base":1500,"xp_plus":14},
+{"name":"dinosaur, diplodocus","frequency":"C","frequency_percent":"65%","number_appearing":"d6","armor_class":6,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"24","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-18","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":25,"thac0":7,"xp_base":5000,"xp_plus":35},
+{"name":"dinosaur, elasmosaurus","frequency":"U","frequency_percent":"20%","number_appearing":"d2","armor_class":7,"move_land":null,"move_fly":null,"move_swim":15,"move_misc":null,"MC":null,"hit_dice":"15","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"4-24","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":25,"thac0":8,"xp_base":2400,"xp_plus":20},
+{"name":"dinosaur, lambeosaurus","frequency":"C","frequency_percent":"65%","number_appearing":"2d8","armor_class":6,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"12","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-12","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":26,"thac0":9,"xp_base":1300,"xp_plus":16},
+{"name":"dinosaur, megalosaurus","frequency":"U","frequency_percent":"20%","number_appearing":"d2","armor_class":5,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"12","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-18","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":26,"thac0":9,"xp_base":1300,"xp_plus":16},
+{"name":"dinosaur, mosasaurus","frequency":"U","frequency_percent":"20%","number_appearing":"d3","armor_class":7,"move_land":3,"move_fly":null,"move_swim":15,"move_misc":null,"MC":null,"hit_dice":"12","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"4-32","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":26,"thac0":9,"xp_base":1300,"xp_plus":18},
+{"name":"dinosaur, paleoscincus","frequency":"U","frequency_percent":"20%","number_appearing":"d4","armor_class":-3,"move_land":3,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"9","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-12","special_attacks":"","special_defense":"spikes","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":26,"thac0":12,"xp_base":1300,"xp_plus":12},
+{"name":"dinosaur, plesiosaurus","frequency":"C","frequency_percent":"65%","number_appearing":"d3","armor_class":7,"move_land":null,"move_fly":null,"move_swim":15,"move_misc":null,"MC":null,"hit_dice":"20","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"5-20","special_attacks":"flippers (2-12)","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":27,"thac0":12,"xp_base":4000,"xp_plus":30},
+{"name":"dinosaur, pteranodon","frequency":"C","frequency_percent":"65%","number_appearing":"3d6","armor_class":7,"move_land":3,"move_fly":15,"move_swim":null,"move_misc":null,"MC":"C","hit_dice":"3+3","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-8","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":27,"thac0":16,"xp_base":85,"xp_plus":4},
+{"name":"djinni","frequency":"V","frequency_percent":"3%","number_appearing":"1","armor_class":4,"move_land":9,"move_fly":24,"move_swim":null,"move_misc":null,"MC":"A","hit_dice":"7+3","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-16","special_attacks":"special","special_defense":"","magic_resistance":"0%","Intelligence":"ave-high","IQ":11,"alignment":"CG","size":"L","psionics":0,"book":"M","page":28,"thac0":13,"xp_base":725,"xp_plus":5},
+{"name":"dog, war","frequency":"U","frequency_percent":"20%","number_appearing":"var.","armor_class":6,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"2+2","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-8","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"semi","IQ":3,"alignment":"N","size":"M","psionics":0,"book":"M","page":29,"thac0":16,"xp_base":35,"xp_plus":3},
+{"name":"dog, wild","frequency":"C","frequency_percent":"65%","number_appearing":"4d4","armor_class":7,"move_land":15,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"1+1","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-4","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"semi","IQ":3,"alignment":"N","size":"M","psionics":0,"book":"M","page":29,"thac0":18,"xp_base":20,"xp_plus":2},
+{"name":"dolphin","frequency":"U","frequency_percent":"20%","number_appearing":"2d10","armor_class":5,"move_land":null,"move_fly":null,"move_swim":30,"move_misc":null,"MC":null,"hit_dice":"2+2","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-8","special_attacks":"","special_defense":"save as F4","magic_resistance":"0%","Intelligence":"very","IQ":11,"alignment":"LG","size":"M","psionics":0,"book":"M","page":29,"thac0":16,"xp_base":65,"xp_plus":3},
+{"name":"doppleganger","frequency":"V","frequency_percent":"3%","number_appearing":"3d4","armor_class":5,"move_land":9,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"4","chance_in_lair":"20%","treasure_type":"E","number_of_attacks":1,"damage_per_attack":"1-12","special_attacks":"surprise 1-4","special_defense":"save as F10, other","magic_resistance":"0%","Intelligence":"very","IQ":11,"alignment":"N","size":"M","psionics":0,"book":"M","page":29,"thac0":15,"xp_base":330,"xp_plus":4},
+{"name":"dryad","frequency":"V","frequency_percent":"3%","number_appearing":"d6","armor_class":9,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"2","chance_in_lair":"10%","treasure_type":"Mx100,Qx10","number_of_attacks":1,"damage_per_attack":"by dagger","special_attacks":"charm","special_defense":"dimension door","magic_resistance":"50%","Intelligence":"high","IQ":13,"alignment":"N","size":"M","psionics":0,"book":"M","page":35,"thac0":16,"xp_base":105,"xp_plus":3},
+{"name":"eel, electric","frequency":"R","frequency_percent":"7%","number_appearing":"d3","armor_class":9,"move_land":null,"move_fly":null,"move_swim":12,"move_misc":null,"MC":null,"hit_dice":"2","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-3","special_attacks":"jolt  (3d8)","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"M","psionics":0,"book":"M","page":36,"thac0":16,"xp_base":65,"xp_plus":2},
+{"name":"eel, giant","frequency":"U","frequency_percent":"20%","number_appearing":"d4","armor_class":6,"move_land":null,"move_fly":null,"move_swim":9,"move_misc":null,"MC":null,"hit_dice":"5","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-18","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"M","psionics":0,"book":"M","page":36,"thac0":15,"xp_base":49,"xp_plus":1},
+{"name":"efreeti","frequency":"V","frequency_percent":"3%","number_appearing":"1","armor_class":2,"move_land":9,"move_fly":24,"move_swim":null,"move_misc":null,"MC":"B","hit_dice":"10","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-24","special_attacks":"special","special_defense":"to fire","magic_resistance":"0%","Intelligence":"very","IQ":11,"alignment":"N/LE","size":"L","psionics":0,"book":"M","page":37,"thac0":10,"xp_base":1950,"xp_plus":14},
+{"name":"frog, poisonous","frequency":"R","frequency_percent":"7%","number_appearing":"2d6","armor_class":8,"move_land":3,"move_fly":null,"move_swim":9,"move_misc":null,"MC":null,"hit_dice":"1","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1","special_attacks":"poison (+4 save)","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"S","psionics":0,"book":"M","page":41,"thac0":19,"xp_base":35,"xp_plus":1},
+{"name":"gar, giant","frequency":"R","frequency_percent":"7%","number_appearing":"d6","armor_class":3,"move_land":null,"move_fly":null,"move_swim":30,"move_misc":null,"MC":null,"hit_dice":"8","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"5-20","special_attacks":"swallow (20)","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":42,"thac0":12,"xp_base":550,"xp_plus":10},
+{"name":"gelatinous cube","frequency":"U","frequency_percent":"20%","number_appearing":"1","armor_class":8,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"4","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-8","special_attacks":"surprise 1-3","special_defense":"paralyze, others","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":43,"thac0":15,"xp_base":150,"xp_plus":4},
+{"name":"giant, cloud","frequency":"R","frequency_percent":"7%","number_appearing":"d6","armor_class":2,"move_land":15,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"12+4","chance_in_lair":"40%","treasure_type":"E, Qx5","number_of_attacks":1,"damage_per_attack":"6-36","special_attacks":"hurl rocks (2-24)","special_defense":"suprised on 1","magic_resistance":"0%","Intelligence":"ave-very","IQ":10,"alignment":"NG/E","size":"L","psionics":0,"book":"M","page":44,"thac0":9,"xp_base":4250,"xp_plus":16},
+{"name":"giant, frost","frequency":"R","frequency_percent":"7%","number_appearing":"d8","armor_class":4,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"10+2","chance_in_lair":"30%","treasure_type":"E","number_of_attacks":1,"damage_per_attack":"4-24","special_attacks":"hurl rocks (2-20)","special_defense":"to cold","magic_resistance":"0%","Intelligence":"low-ave","IQ":7,"alignment":"CE","size":"L","psionics":0,"book":"M","page":44,"thac0":10,"xp_base":2250,"xp_plus":14},
+{"name":"giant, hill","frequency":"C","frequency_percent":"65%","number_appearing":"d10","armor_class":4,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"8+1","chance_in_lair":"25%","treasure_type":"D","number_of_attacks":1,"damage_per_attack":"2-16","special_attacks":"hurl rocks (2-16)","special_defense":"catch rocks (30%)","magic_resistance":"0%","Intelligence":"low","IQ":6,"alignment":"CE","size":"L","psionics":0,"book":"M","page":44,"thac0":12,"xp_base":1400,"xp_plus":12},
+{"name":"giant, stone","frequency":"U","frequency_percent":"20%","number_appearing":"d8","armor_class":0,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"9+2","chance_in_lair":"30%","treasure_type":"D","number_of_attacks":1,"damage_per_attack":"3-18","special_attacks":"hurl rocks (3-30)","special_defense":"catch rocks (90%)","magic_resistance":"0%","Intelligence":"average","IQ":9,"alignment":"N","size":"L","psionics":0,"book":"M","page":44,"thac0":12,"xp_base":1800,"xp_plus":14},
+{"name":"goat, giant","frequency":"R","frequency_percent":"7%","number_appearing":"d12","armor_class":7,"move_land":18,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"3+1","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-16","special_attacks":"charge","special_defense":"","magic_resistance":"0%","Intelligence":"semi","IQ":3,"alignment":"N","size":"L","psionics":0,"book":"M","page":47,"thac0":16,"xp_base":85,"xp_plus":4},
+{"name":"gorgon","frequency":"R","frequency_percent":"7%","number_appearing":"d4","armor_class":2,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"8","chance_in_lair":"40%","treasure_type":"E","number_of_attacks":1,"damage_per_attack":"2-12","special_attacks":"petrify breath","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"L","psionics":0,"book":"M","page":49,"thac0":12,"xp_base":1750,"xp_plus":10},
+{"name":"groaning spirit","frequency":"V","frequency_percent":"3%","number_appearing":"1","armor_class":0,"move_land":15,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"7","chance_in_lair":"10%","treasure_type":"D","number_of_attacks":1,"damage_per_attack":"1-8","special_attacks":"death keen","special_defense":"+1 to hit, spells","magic_resistance":"50%","Intelligence":"exceptional","IQ":15,"alignment":"CE","size":"M","psionics":0,"book":"M","page":50,"thac0":13,"xp_base":2450,"xp_plus":10},
+{"name":"hippocampus","frequency":"R","frequency_percent":"7%","number_appearing":"2d4","armor_class":5,"move_land":null,"move_fly":null,"move_swim":24,"move_misc":null,"MC":null,"hit_dice":"4","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-4","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"average","IQ":9,"alignment":"CG","size":"L","psionics":0,"book":"M","page":51,"thac0":15,"xp_base":60,"xp_plus":4},
+{"name":"hippopotamus","frequency":"U","frequency_percent":"20%","number_appearing":"2d6","armor_class":6,"move_land":9,"move_fly":null,"move_swim":12,"move_misc":null,"MC":null,"hit_dice":"8","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-12 or 3-18","special_attacks":"capsize","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"L","psionics":0,"book":"M","page":52,"thac0":12,"xp_base":375,"xp_plus":6},
+{"name":"homonculous","frequency":"V","frequency_percent":"3%","number_appearing":"1","armor_class":6,"move_land":6,"move_fly":18,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"2","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-3","special_attacks":"sleep","special_defense":"save as master","magic_resistance":"0%","Intelligence":"var.","IQ":null,"alignment":"var","size":"S","psionics":0,"book":"M","page":53,"thac0":16,"xp_base":81,"xp_plus":2},
+{"name":"hyena","frequency":"C","frequency_percent":"65%","number_appearing":"2d6","armor_class":7,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"3","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-8","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"M","psionics":0,"book":"M","page":54,"thac0":16,"xp_base":35,"xp_plus":3},
+{"name":"hyena, giant","frequency":"V","frequency_percent":"3%","number_appearing":"2d4","armor_class":7,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"5","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-12","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"L","psionics":0,"book":"M","page":54,"thac0":15,"xp_base":90,"xp_plus":5},
+{"name":"imp","frequency":"V","frequency_percent":"3%","number_appearing":"1","armor_class":2,"move_land":6,"move_fly":18,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"2+2","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-4","special_attacks":"special","special_defense":"special","magic_resistance":"25%","Intelligence":"average","IQ":9,"alignment":"LE","size":"S","psionics":0,"book":"M","page":54,"thac0":16,"xp_base":275,"xp_plus":3},
+{"name":"invisible stalker","frequency":"V","frequency_percent":"3%","number_appearing":"1","armor_class":3,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"8","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"4-16","special_attacks":"surprise 1-5","special_defense":"invisible","magic_resistance":"30%","Intelligence":"high","IQ":13,"alignment":"N","size":"L","psionics":0,"book":"M","page":55,"thac0":12,"xp_base":1090,"xp_plus":10},
+{"name":"ixitxachitl","frequency":"V","frequency_percent":"3%","number_appearing":"d10x10","armor_class":6,"move_land":null,"move_fly":null,"move_swim":12,"move_misc":null,"MC":null,"hit_dice":"1+1","chance_in_lair":"60%","treasure_type":"P,R,S","number_of_attacks":1,"damage_per_attack":"3-12","special_attacks":"cleric spells","special_defense":"","magic_resistance":"0%","Intelligence":"ave-high","IQ":11,"alignment":"CE","size":"M","psionics":0,"book":"M","page":55,"thac0":18,"xp_base":28,"xp_plus":2},
+{"name":"lamia","frequency":"V","frequency_percent":"3%","number_appearing":"1","armor_class":3,"move_land":24,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"9","chance_in_lair":"60%","treasure_type":"D","number_of_attacks":1,"damage_per_attack":"1-4","special_attacks":"spells, wisdom drain","special_defense":"","magic_resistance":"0%","Intelligence":"high","IQ":13,"alignment":"CE","size":"M","psionics":0,"book":"M","page":59,"thac0":12,"xp_base":1700,"xp_plus":12},
+{"name":"lamprey, giant","frequency":"R","frequency_percent":"7%","number_appearing":"d4","armor_class":6,"move_land":null,"move_fly":null,"move_swim":9,"move_misc":null,"MC":null,"hit_dice":"5","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-6","special_attacks":"drain blood (10 hp)","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"M","psionics":0,"book":"M","page":59,"thac0":15,"xp_base":165,"xp_plus":5},
+{"name":"lamprey, normal","frequency":"U","frequency_percent":"20%","number_appearing":"d2","armor_class":7,"move_land":null,"move_fly":null,"move_swim":12,"move_misc":null,"MC":null,"hit_dice":"1+2","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-2","special_attacks":"drain blood (2 hp)","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"S","psionics":0,"book":"M","page":59,"thac0":18,"xp_base":28,"xp_plus":2},
+{"name":"larva","frequency":"C","frequency_percent":"65%","number_appearing":"d4x10","armor_class":7,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"1","chance_in_lair":"100%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-5","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"low","IQ":6,"alignment":"E","size":"M","psionics":0,"book":"M","page":59,"thac0":19,"xp_base":10,"xp_plus":1},
+{"name":"leucrotta","frequency":"R","frequency_percent":"7%","number_appearing":"d4","armor_class":4,"move_land":18,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"6+1","chance_in_lair":"40%","treasure_type":"D","number_of_attacks":1,"damage_per_attack":"3-18","special_attacks":"imitate sound","special_defense":"kick in retreat","magic_resistance":"0%","Intelligence":"average","IQ":9,"alignment":"CE","size":"L","psionics":0,"book":"M","page":60,"thac0":13,"xp_base":475,"xp_plus":8},
+{"name":"lizard, giant","frequency":"U","frequency_percent":"20%","number_appearing":"2d6","armor_class":5,"move_land":15,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"3+1","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-8","special_attacks":"x2 damage on 20","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":61,"thac0":16,"xp_base":125,"xp_plus":4},
+{"name":"lizard, subterranean","frequency":"U","frequency_percent":"20%","number_appearing":"d6","armor_class":5,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"6","chance_in_lair":"20%","treasure_type":"O,P,Qx5","number_of_attacks":1,"damage_per_attack":"2-12","special_attacks":"x2 damage on 20","special_defense":"run on walls","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":61,"thac0":13,"xp_base":350,"xp_plus":6},
+{"name":"lurker above","frequency":"U","frequency_percent":"20%","number_appearing":"d4","armor_class":6,"move_land":1,"move_fly":9,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"10","chance_in_lair":"50%","treasure_type":"C,Y","number_of_attacks":1,"damage_per_attack":"1-6","special_attacks":"surprise 1-4, etc.","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":62,"thac0":10,"xp_base":1500,"xp_plus":14},
+{"name":"lycanthrope, wereboar","frequency":"R","frequency_percent":"7%","number_appearing":"2d4","armor_class":4,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"5+2","chance_in_lair":"20%","treasure_type":"B,S","number_of_attacks":1,"damage_per_attack":"2-12","special_attacks":"","special_defense":"+1 to hit or silver","magic_resistance":"0%","Intelligence":"average","IQ":9,"alignment":"N","size":"L","psionics":0,"book":"M","page":63,"thac0":13,"xp_base":825,"xp_plus":10},
+{"name":"lycanthrope, werewolf","frequency":"C","frequency_percent":"65%","number_appearing":"3d6","armor_class":5,"move_land":15,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"4+3","chance_in_lair":"25%","treasure_type":"B","number_of_attacks":1,"damage_per_attack":"2-8","special_attacks":"surprise 1-3","special_defense":"+1 to hit or silver","magic_resistance":"0%","Intelligence":"average","IQ":9,"alignment":"CE","size":"M","psionics":0,"book":"M","page":63,"thac0":15,"xp_base":275,"xp_plus":6},
+{"name":"medusa","frequency":"R","frequency_percent":"7%","number_appearing":"d3","armor_class":5,"move_land":9,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"6","chance_in_lair":"50%","treasure_type":"P,Qx10,X,Y","number_of_attacks":1,"damage_per_attack":"1-4","special_attacks":"petrify gaze, poison","special_defense":"","magic_resistance":"0%","Intelligence":"very","IQ":11,"alignment":"LE","size":"M","psionics":0,"book":"M","page":66,"thac0":13,"xp_base":725,"xp_plus":6},
+{"name":"merman","frequency":"U","frequency_percent":"20%","number_appearing":"2d10x10","armor_class":7,"move_land":1,"move_fly":null,"move_swim":18,"move_misc":null,"MC":null,"hit_dice":"1+1","chance_in_lair":"25%","treasure_type":"C,R","number_of_attacks":1,"damage_per_attack":"by weapon","special_attacks":"slow ship","special_defense":"","magic_resistance":"0%","Intelligence":"ave-very","IQ":10,"alignment":"N","size":"M","psionics":0,"book":"M","page":70,"thac0":18,"xp_base":20,"xp_plus":2},
+{"name":"morkoth","frequency":"V","frequency_percent":"3%","number_appearing":"1","armor_class":3,"move_land":null,"move_fly":null,"move_swim":18,"move_misc":null,"MC":null,"hit_dice":"7","chance_in_lair":"100%","treasure_type":"G","number_of_attacks":1,"damage_per_attack":"1-10","special_attacks":"hypnosis","special_defense":"spell reflection","magic_resistance":"0%","Intelligence":"exceptional","IQ":15,"alignment":"CE","size":"M","psionics":0,"book":"M","page":71,"thac0":13,"xp_base":1050,"xp_plus":8},
+{"name":"mummy","frequency":"R","frequency_percent":"7%","number_appearing":"2d4","armor_class":3,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"6+3","chance_in_lair":"80%","treasure_type":"D","number_of_attacks":1,"damage_per_attack":"1-12","special_attacks":"fear, rot","special_defense":"+1 to hit, to spells","magic_resistance":"0%","Intelligence":"low","IQ":6,"alignment":"LE","size":"M","psionics":0,"book":"M","page":72,"thac0":13,"xp_base":1150,"xp_plus":8},
+{"name":"night hag","frequency":"V","frequency_percent":"3%","number_appearing":"1","armor_class":9,"move_land":9,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"8","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-12","special_attacks":"spells, etc.","special_defense":"+3 to hit or silver","magic_resistance":"65%","Intelligence":"exceptional","IQ":15,"alignment":"NE","size":"M","psionics":0,"book":"M","page":73,"thac0":12,"xp_base":1750,"xp_plus":10},
+{"name":"ochre jelly","frequency":"U","frequency_percent":"20%","number_appearing":"d3","armor_class":8,"move_land":3,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"6","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-12","special_attacks":"","special_defense":"to lightning","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"M","psionics":0,"book":"M","page":75,"thac0":13,"xp_base":150,"xp_plus":6},
+{"name":"ogre","frequency":"C","frequency_percent":"65%","number_appearing":"2d10","armor_class":5,"move_land":9,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"4+1","chance_in_lair":"20%","treasure_type":"Mx10/Q,B,S","number_of_attacks":1,"damage_per_attack":"by weapon +2 (d10)","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"low","IQ":6,"alignment":"CE","size":"L","psionics":0,"book":"M","page":75,"thac0":15,"xp_base":90,"xp_plus":5},
+{"name":"ogre mage","frequency":"V","frequency_percent":"3%","number_appearing":"d6","armor_class":4,"move_land":9,"move_fly":15,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"5+2","chance_in_lair":"35%","treasure_type":"G,R,S","number_of_attacks":1,"damage_per_attack":"1-12","special_attacks":"spells","special_defense":"","magic_resistance":"0%","Intelligence":"ave-excptnl","IQ":12,"alignment":"LE","size":"L","psionics":0,"book":"M","page":76,"thac0":15,"xp_base":900,"xp_plus":6},
+{"name":"orc","frequency":"C","frequency_percent":"65%","number_appearing":"3d10x10","armor_class":6,"move_land":9,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"1","chance_in_lair":"35%","treasure_type":"L/C,O,Qx10,S","number_of_attacks":1,"damage_per_attack":"by weapon (d8)","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"average","IQ":9,"alignment":"LE","size":"M","psionics":0,"book":"M","page":76,"thac0":19,"xp_base":10,"xp_plus":1},
+{"name":"otter, giant","frequency":"R","frequency_percent":"7%","number_appearing":"d4+1","armor_class":5,"move_land":9,"move_fly":null,"move_swim":18,"move_misc":null,"MC":null,"hit_dice":"5","chance_in_lair":"10%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"3-18","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"semi","IQ":3,"alignment":"N","size":"L","psionics":0,"book":"M","page":77,"thac0":15,"xp_base":90,"xp_plus":5},
+{"name":"peryton","frequency":"R","frequency_percent":"7%","number_appearing":"2d4","armor_class":7,"move_land":12,"move_fly":21,"move_swim":null,"move_misc":null,"MC":"C","hit_dice":"4","chance_in_lair":"10%","treasure_type":"B","number_of_attacks":1,"damage_per_attack":"4-16","special_attacks":"+2 to hit","special_defense":"+1 to hit","magic_resistance":"0%","Intelligence":"average","IQ":9,"alignment":"CE","size":"M","psionics":0,"book":"M","page":78,"thac0":15,"xp_base":150,"xp_plus":4},
+{"name":"pike, giant","frequency":"R","frequency_percent":"7%","number_appearing":"d8","armor_class":5,"move_land":null,"move_fly":null,"move_swim":36,"move_misc":null,"MC":null,"hit_dice":"4","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"4-16","special_attacks":"surprise on 1-4","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":78,"thac0":15,"xp_base":85,"xp_plus":4},
+{"name":"porcupine, giant","frequency":"U","frequency_percent":"20%","number_appearing":"d2","armor_class":5,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"6","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-8","special_attacks":"quills (d8 for 1-4)","special_defense":"quills (d4)","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"L","psionics":0,"book":"M","page":79,"thac0":13,"xp_base":350,"xp_plus":6},
+{"name":"pseudo-dragon","frequency":"V","frequency_percent":"3%","number_appearing":"1","armor_class":2,"move_land":6,"move_fly":24,"move_swim":null,"move_misc":null,"MC":"B","hit_dice":"2","chance_in_lair":"5%","treasure_type":"Qx10","number_of_attacks":1,"damage_per_attack":"1-3","special_attacks":"poison sting","special_defense":"chameleon power","magic_resistance":"35%","Intelligence":"average","IQ":9,"alignment":"N/G","size":"S","psionics":0,"book":"M","page":79,"thac0":16,"xp_base":200,"xp_plus":2},
+{"name":"ram, giant","frequency":"R","frequency_percent":"7%","number_appearing":"2d4","armor_class":6,"move_land":15,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"4","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-12","special_attacks":"charge","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"L","psionics":0,"book":"M","page":81,"thac0":15,"xp_base":85,"xp_plus":4},
+{"name":"ray, sting","frequency":"C","frequency_percent":"65%","number_appearing":"d3","armor_class":7,"move_land":null,"move_fly":null,"move_swim":9,"move_misc":null,"MC":null,"hit_dice":"1","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-3","special_attacks":"poison","special_defense":"90% camouflage","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"S","psionics":0,"book":"M","page":81,"thac0":19,"xp_base":90,"xp_plus":1},
+{"name":"rhinoceros, woolly","frequency":"C","frequency_percent":"65%","number_appearing":"d4","armor_class":5,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"10","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-12","special_attacks":"charge","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"L","psionics":0,"book":"M","page":82,"thac0":10,"xp_base":1350,"xp_plus":14},
+{"name":"sahuagin","frequency":"U","frequency_percent":"20%","number_appearing":"2d4x10","armor_class":5,"move_land":12,"move_fly":null,"move_swim":24,"move_misc":null,"MC":null,"hit_dice":"2+2","chance_in_lair":"25%","treasure_type":"N/I,O,P,Qx10,X,Y","number_of_attacks":1,"damage_per_attack":"by weapon","special_attacks":"special","special_defense":"special","magic_resistance":"0%","Intelligence":"high","IQ":13,"alignment":"LE","size":"M","psionics":0,"book":"M","page":84,"thac0":16,"xp_base":35,"xp_plus":3},
+{"name":"satyr","frequency":"U","frequency_percent":"20%","number_appearing":"2d4","armor_class":5,"move_land":19,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"5","chance_in_lair":"40%","treasure_type":"I,S,X","number_of_attacks":1,"damage_per_attack":"2-8","special_attacks":"spells","special_defense":"blend, surprise on 1","magic_resistance":"50%","Intelligence":"very","IQ":11,"alignment":"N","size":"M","psionics":0,"book":"M","page":85,"thac0":15,"xp_base":280,"xp_plus":5},
+{"name":"sea hag","frequency":"U","frequency_percent":"20%","number_appearing":"d4","armor_class":7,"move_land":null,"move_fly":null,"move_swim":15,"move_misc":null,"MC":null,"hit_dice":"3","chance_in_lair":"10%","treasure_type":"C,Y","number_of_attacks":1,"damage_per_attack":"dagger","special_attacks":"death gaze","special_defense":"fright","magic_resistance":"50%","Intelligence":"average","IQ":9,"alignment":"CE","size":"M","psionics":0,"book":"M","page":86,"thac0":16,"xp_base":600,"xp_plus":3},
+{"name":"shadow","frequency":"R","frequency_percent":"7%","number_appearing":"2d10","armor_class":7,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"3+3","chance_in_lair":"40%","treasure_type":"F","number_of_attacks":1,"damage_per_attack":"2-5","special_attacks":"strength drain","special_defense":"+1 to hit, spells","magic_resistance":"0%","Intelligence":"low","IQ":6,"alignment":"CE","size":"M","psionics":0,"book":"M","page":86,"thac0":16,"xp_base":255,"xp_plus":4},
+{"name":"skeleton","frequency":"R","frequency_percent":"7%","number_appearing":"3d10","armor_class":7,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"1","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-6","special_attacks":"","special_defense":"1/2 from edged w.","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"M","psionics":0,"book":"M","page":87,"thac0":19,"xp_base":14,"xp_plus":1},
+{"name":"skunk, giant","frequency":"U","frequency_percent":"20%","number_appearing":"1","armor_class":7,"move_land":9,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"5","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-6","special_attacks":"squirt musk","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"M","psionics":0,"book":"M","page":88,"thac0":15,"xp_base":165,"xp_plus":5},
+{"name":"slug, giant","frequency":"U","frequency_percent":"20%","number_appearing":"1","armor_class":8,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"12","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-12","special_attacks":"spit acid","special_defense":"to blunt weapons","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"L","psionics":0,"book":"M","page":88,"thac0":9,"xp_base":2000,"xp_plus":16},
+{"name":"snake, giant poisonous","frequency":"U","frequency_percent":"20%","number_appearing":"d6","armor_class":5,"move_land":15,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"4+2","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-3","special_attacks":"poison","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"L","psionics":0,"book":"M","page":88,"thac0":15,"xp_base":390,"xp_plus":5},
+{"name":"snake, giant spitting","frequency":"R","frequency_percent":"7%","number_appearing":"d4","armor_class":5,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"4+2","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-3","special_attacks":"poison","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"M","psionics":0,"book":"M","page":88,"thac0":15,"xp_base":390,"xp_plus":5},
+{"name":"spectre","frequency":"R","frequency_percent":"7%","number_appearing":"d6","armor_class":2,"move_land":15,"move_fly":30,"move_swim":null,"move_misc":null,"MC":"D","hit_dice":"7+3","chance_in_lair":"20%","treasure_type":"Qx3,X,Y","number_of_attacks":1,"damage_per_attack":"1-8","special_attacks":"energy drain (2)","special_defense":"+1 to hit, etc.","magic_resistance":"0%","Intelligence":"high","IQ":13,"alignment":"LE","size":"M","psionics":0,"book":"M","page":89,"thac0":13,"xp_base":1650,"xp_plus":10},
+{"name":"spider, giant","frequency":"U","frequency_percent":"20%","number_appearing":"d8","armor_class":4,"move_land":3,"move_fly":null,"move_swim":null,"move_misc":12,"MC":null,"hit_dice":"4+4","chance_in_lair":"70%","treasure_type":"C","number_of_attacks":1,"damage_per_attack":"2-8","special_attacks":"webs, poison","special_defense":"","magic_resistance":"0%","Intelligence":"low","IQ":6,"alignment":"CE","size":"L","psionics":0,"book":"M","page":90,"thac0":15,"xp_base":315,"xp_plus":5},
+{"name":"spider, giant water","frequency":"C","frequency_percent":"65%","number_appearing":"d10","armor_class":5,"move_land":null,"move_fly":null,"move_swim":15,"move_misc":null,"MC":null,"hit_dice":"3+3","chance_in_lair":"90%","treasure_type":"J-N,Q","number_of_attacks":1,"damage_per_attack":"1-4","special_attacks":"poison","special_defense":"","magic_resistance":"0%","Intelligence":"semi","IQ":3,"alignment":"N","size":"M","psionics":0,"book":"M","page":90,"thac0":16,"xp_base":190,"xp_plus":4},
+{"name":"spider, huge","frequency":"C","frequency_percent":"65%","number_appearing":"d12","armor_class":6,"move_land":18,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"2+2","chance_in_lair":"50%","treasure_type":"J-N,Q","number_of_attacks":1,"damage_per_attack":"1-6","special_attacks":"suprise 1-5, poison","special_defense":"save at +1","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"M","psionics":0,"book":"M","page":90,"thac0":16,"xp_base":145,"xp_plus":3},
+{"name":"spider, large","frequency":"C","frequency_percent":"65%","number_appearing":"2d10","armor_class":8,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":15,"MC":null,"hit_dice":"1+1","chance_in_lair":"60%","treasure_type":"J-N","number_of_attacks":1,"damage_per_attack":"1","special_attacks":"poison (at +2)","special_defense":"","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"S","psionics":0,"book":"M","page":90,"thac0":18,"xp_base":65,"xp_plus":2},
+{"name":"spider, phase","frequency":"R","frequency_percent":"7%","number_appearing":"d4","armor_class":7,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":15,"MC":null,"hit_dice":"5+5","chance_in_lair":"75%","treasure_type":"E","number_of_attacks":1,"damage_per_attack":"1-6","special_attacks":"poison (at -2)","special_defense":"ethereal","magic_resistance":"0%","Intelligence":"low","IQ":6,"alignment":"N","size":"L","psionics":0,"book":"M","page":90,"thac0":15,"xp_base":700,"xp_plus":6},
+{"name":"sprite","frequency":"R","frequency_percent":"7%","number_appearing":"d10x10","armor_class":6,"move_land":9,"move_fly":18,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"1","chance_in_lair":"20%","treasure_type":"C","number_of_attacks":1,"damage_per_attack":"by weapon","special_attacks":"sleep","special_defense":"invisible, etc.","magic_resistance":"0%","Intelligence":"very","IQ":11,"alignment":"N/G","size":"S","psionics":0,"book":"M","page":92,"thac0":19,"xp_base":80,"xp_plus":1},
+{"name":"stirge","frequency":"U","frequency_percent":"20%","number_appearing":"3d10","armor_class":8,"move_land":3,"move_fly":18,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"1+1","chance_in_lair":"60%","treasure_type":"D","number_of_attacks":1,"damage_per_attack":"1-3","special_attacks":"drain (1-4, max 12)","special_defense":"hit as 4 HD","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"S","psionics":0,"book":"M","page":92,"thac0":18,"xp_base":36,"xp_plus":2},
+{"name":"titanothere","frequency":"U","frequency_percent":"20%","number_appearing":"d12","armor_class":6,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"12","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-16","special_attacks":"charge, trample","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"L","psionics":0,"book":"M","page":95,"thac0":9,"xp_base":2000,"xp_plus":16},
+{"name":"toad, giant","frequency":"C","frequency_percent":"65%","number_appearing":"d12","armor_class":6,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":6,"MC":null,"hit_dice":"2+4","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-8","special_attacks":"hop","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"M","psionics":0,"book":"M","page":95,"thac0":16,"xp_base":50,"xp_plus":3},
+{"name":"toad, giant poisonous","frequency":"U","frequency_percent":"20%","number_appearing":"d8","armor_class":7,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":6,"MC":null,"hit_dice":"2","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-5","special_attacks":"hop, poison","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"M","psionics":0,"book":"M","page":95,"thac0":16,"xp_base":155,"xp_plus":2},
+{"name":"toad, ice","frequency":"R","frequency_percent":"7%","number_appearing":"d4","armor_class":4,"move_land":9,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"5","chance_in_lair":"40%","treasure_type":"C","number_of_attacks":1,"damage_per_attack":"3-12","special_attacks":"cold (3-18)","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"L","psionics":0,"book":"M","page":95,"thac0":15,"xp_base":205,"xp_plus":5},
+{"name":"triton","frequency":"R","frequency_percent":"7%","number_appearing":"d6x10","armor_class":5,"move_land":null,"move_fly":null,"move_swim":15,"move_misc":null,"MC":null,"hit_dice":"3","chance_in_lair":"25%","treasure_type":"C,R,S,T,X","number_of_attacks":1,"damage_per_attack":"by weapon","special_attacks":"leaders, etc.","special_defense":"special","magic_resistance":"90%","Intelligence":"high+","IQ":14,"alignment":"N/G","size":"M","psionics":0,"book":"M","page":96,"thac0":16,"xp_base":105,"xp_plus":3},
+{"name":"vampire","frequency":"R","frequency_percent":"7%","number_appearing":"d4","armor_class":1,"move_land":12,"move_fly":18,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"8+3","chance_in_lair":"25%","treasure_type":"F","number_of_attacks":1,"damage_per_attack":"5-10","special_attacks":"energy drain (2)","special_defense":"+1 to hit, etc.","magic_resistance":"0%","Intelligence":"exceptional","IQ":15,"alignment":"CE","size":"M","psionics":0,"book":"M","page":99,"thac0":12,"xp_base":3800,"xp_plus":12},
+{"name":"weasel, giant","frequency":"R","frequency_percent":"7%","number_appearing":"d8","armor_class":6,"move_land":15,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"3+3","chance_in_lair":"15%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-12","special_attacks":"drain (2-12)","special_defense":"","magic_resistance":"0%","Intelligence":"animal","IQ":1,"alignment":"N","size":"M","psionics":0,"book":"M","page":100,"thac0":16,"xp_base":125,"xp_plus":4},
+{"name":"wight","frequency":"U","frequency_percent":"20%","number_appearing":"2d8","armor_class":5,"move_land":12,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"4+3","chance_in_lair":"70%","treasure_type":"B","number_of_attacks":1,"damage_per_attack":"1-4","special_attacks":"energy drain","special_defense":"+1 to hit or silver","magic_resistance":"0%","Intelligence":"average","IQ":9,"alignment":"LE","size":"M","psionics":0,"book":"M","page":100,"thac0":15,"xp_base":540,"xp_plus":5},
+{"name":"will-o-(the)-wisp","frequency":"U","frequency_percent":"20%","number_appearing":"d3","armor_class":-8,"move_land":null,"move_fly":18,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"9","chance_in_lair":"5%","treasure_type":"Z","number_of_attacks":1,"damage_per_attack":"2-16","special_attacks":"entrap","special_defense":"to spells","magic_resistance":"0%","Intelligence":"exceptional","IQ":15,"alignment":"CE","size":"S","psionics":0,"book":"M","page":101,"thac0":12,"xp_base":1200,"xp_plus":12},
+{"name":"wolf","frequency":"C","frequency_percent":"65%","number_appearing":"2d10","armor_class":7,"move_land":18,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"2+2","chance_in_lair":"10%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-5","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"semi","IQ":3,"alignment":"N","size":"S","psionics":0,"book":"M","page":101,"thac0":16,"xp_base":35,"xp_plus":3},
+{"name":"wolf, dire","frequency":"R","frequency_percent":"7%","number_appearing":"3d4","armor_class":6,"move_land":18,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"3+3","chance_in_lair":"10%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-8","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"semi","IQ":3,"alignment":"N","size":"M","psionics":0,"book":"M","page":101,"thac0":16,"xp_base":60,"xp_plus":4},
+{"name":"wolf, winter","frequency":"V","frequency_percent":"3%","number_appearing":"2d4","armor_class":5,"move_land":18,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"6","chance_in_lair":"10%","treasure_type":"I","number_of_attacks":1,"damage_per_attack":"2-8","special_attacks":"frost (6-24)","special_defense":"","magic_resistance":"0%","Intelligence":"average","IQ":9,"alignment":"N/E","size":"L","psionics":0,"book":"M","page":101,"thac0":15,"xp_base":245,"xp_plus":5},
+{"name":"wolf, worg","frequency":"R","frequency_percent":"7%","number_appearing":"3d4","armor_class":6,"move_land":18,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"4+4","chance_in_lair":"10%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"2-8","special_attacks":"","special_defense":"","magic_resistance":"0%","Intelligence":"low","IQ":6,"alignment":"NE","size":"L","psionics":0,"book":"M","page":101,"thac0":15,"xp_base":90,"xp_plus":5},
+{"name":"wraith","frequency":"U","frequency_percent":"20%","number_appearing":"2d6","armor_class":4,"move_land":12,"move_fly":24,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"5+3","chance_in_lair":"25%","treasure_type":"E","number_of_attacks":1,"damage_per_attack":"1-6","special_attacks":"energy drain","special_defense":"+1 to hit or silver","magic_resistance":"0%","Intelligence":"very","IQ":11,"alignment":"LE","size":"M","psionics":0,"book":"M","page":102,"thac0":15,"xp_base":575,"xp_plus":6},
+{"name":"zombie","frequency":"R","frequency_percent":"7%","number_appearing":"3d8","armor_class":8,"move_land":6,"move_fly":null,"move_swim":null,"move_misc":null,"MC":null,"hit_dice":"2","chance_in_lair":"0%","treasure_type":"--","number_of_attacks":1,"damage_per_attack":"1-8","special_attacks":"no initiative","special_defense":"to cold, etc.","magic_resistance":"0%","Intelligence":"non","IQ":0,"alignment":"N","size":"M","psionics":0,"book":"M","page":103,"thac0":16,"xp_base":20,"xp_plus":2}];
+
 			//
 			//
 			$( document ).ready(function()
@@ -83,6 +291,13 @@ $weapons=[{"Name":"Axe, Battle","Cost_in_GP":5,"Weight":75,"Sm_Low":1,"Sm_High":
 				for ($k=0; $k<$weapons.length; $k++)
 				{
 					$option="<option value='"+$k+"'>"+$weapons[$k].Name+"</option>";
+					$menu.append($option);
+				}
+				//
+				$menu=$("#monster_list");   
+				for ($k=0; $k<$monsters.length; $k++)
+				{
+					$option="<option value='"+$k+"'>"+$monsters[$k].name+"</option>";
 					$menu.append($option);
 				}
 			});
@@ -122,6 +337,54 @@ $weapons=[{"Name":"Axe, Battle","Cost_in_GP":5,"Weight":75,"Sm_Low":1,"Sm_High":
 				//
 				return $result;
 			} // get_dice()
+			//
+			//
+			function get_THACO($class, $level)
+			{
+				var $THAC0;
+				var $level_lable;
+				//
+				$level_lable='LV_'+$level;
+				//
+				if (($class=='Fighter') || ($class=='Ranger') || ($class=='Paladin'))
+				{
+					$THAC0=$fighter_attack_table[10][$level_lable];
+				}
+				//
+				if (($class=='Cleric') || ($class=='Druid') || ($class=='Monk'))
+				{
+					$THAC0=$cleric_attack_table[10][$level_lable];
+				}
+				//
+				if (($class=='Magic User') || ($class=='Illusionist'))
+				{
+					$THAC0=$magic_user_attack_table[10][$level_lable];
+				}
+				//
+				if (($class=='Thief') || ($class=='Assassin'))
+				{
+					$THAC0=$thief_attack_table[10][$level_lable];
+				}
+				//
+				return $THAC0;
+			} // get_THACO()
+			//
+			//
+			function player_class_level()
+			{
+				var $class;
+				var $level;
+				var $THAC0;
+				//
+				$class=$('#player_class').val();
+				$level=$('#player_level').val();
+				//
+				$THAC0=get_THACO($class, $level);
+				//
+				$('#player_thaco').val($THAC0);
+				//
+				return;
+			} // player_class_level()
 			//
 			//
 			function player_dex()
@@ -189,6 +452,23 @@ $weapons=[{"Name":"Axe, Battle","Cost_in_GP":5,"Weight":75,"Sm_Low":1,"Sm_High":
 			} // player_weapon()
 			//
 			//
+			function monster_class_level()
+			{
+				var $class;
+				var $level;
+				var $THAC0;
+				//
+				$class=$('#monster_class').val();
+				$level=$('#monster_level').val();
+				//
+				$THAC0=get_THACO($class, $level);
+				//
+				$('#monster_thaco').val($THAC0);
+				//
+				return;
+			} // monster_class_level()
+			//
+			//
 			function monster_dex()
 			{
 				var $dex;
@@ -214,6 +494,57 @@ $weapons=[{"Name":"Axe, Battle","Cost_in_GP":5,"Weight":75,"Sm_Low":1,"Sm_High":
 				//
 				return;
 			} // monster_dex()
+			//
+			//
+			function monster_select()
+			{
+				var $idx;
+				var $x;
+				//
+				$idx=$('#monster_list').val();
+				//
+				$x=$monsters[$idx].thac0;
+				$('#monster_thaco').val($x);
+				//
+				$x=$monsters[$idx].xp_base;
+				$('#monster_xp_base').val($x);
+				//
+				$x=$monsters[$idx].xp_plus;
+				$('#monster_xp_per_hp').val($x);
+				//
+				$x=$monsters[$idx].size;
+				if (($x=='S') || ($x=='M'))
+				{
+					$("#monster_size_sm").prop("checked", true);
+				}
+				else
+				{
+					$("#monster_size_l").prop("checked", true);
+				}
+				//
+				$x=$monsters[$idx].armor_class;
+				$('#monster_ac').val($x);
+				//
+				$x=$monsters[$idx].hit_dice;
+				$x=$x.split('+');
+				if ($x.length==1)
+				{
+					$('#monster_damage_dice_count').val($x[0]);
+					$('#monster_damage_dice_plus').val(0);
+					$x=roll(8, parseInt($x[0]));
+				}
+				else
+				{
+					$('#monster_damage_dice_count').val($x[0]);
+					$('#monster_damage_plus').val($x[1]);
+					$x=roll(8, parseInt($x[0]))+parseInt($x[1]);
+				}
+				$('#monster_hit_points').val($x);
+				//
+				$('#monster_damage_dice_sides').val(8);
+				//
+				return;
+			} // monster_select()
 			//
 			//
 			function monster_weapon()
@@ -746,36 +1077,189 @@ $weapons=[{"Name":"Axe, Battle","Cost_in_GP":5,"Weight":75,"Sm_Low":1,"Sm_High":
 					$('#fight1000').prop('disabled', true);
 				}
 			} // update_fight()
+			//
+			//
+			function simulate()
+			{
+				$('#simulate').css('display', 'inline');
+				$('#about').css('display', 'none');
+				$('#documentation').css('display', 'none');
+				$('#license').css('display', 'none');
+			} // simulate()
+			//
+			//
+			function about()
+			{
+				$('#simulate').css('display', 'none');
+				$('#about').css('display', 'inline');
+				$('#documentation').css('display', 'none');
+				$('#license').css('display', 'none');
+			} // about()
+			//
+			//
+			function documentation()
+			{
+				$('#simulate').css('display', 'none');
+				$('#about').css('display', 'none');
+				$('#documentation').css('display', 'inline');
+				$('#license').css('display', 'none');
+			} // documentation()
+			//
+			//
+			function license()
+			{
+				$('#simulate').css('display', 'none');
+				$('#about').css('display', 'none');
+				$('#documentation').css('display', 'none');
+				$('#license').css('display', 'inline');
+			} // license()
 		</script>
 	</head>
 	<body>
 		<center>
-			<hr>
-			<h1>AD&D 1E Combat simulator</h1>
-			<hr>
 			<br>
 			<table border=1 width=50%>
 				<tr>
+					<td align='center' valign='middle' height='50px' onclick='simulate();'>SIMULATE</td>
+					<td align='center' valign='middle' height='50px' onclick='about();'>ABOUT</td>
+					<td align='center' valign='middle' height='50px' onclick='documentation();'>DOCUMENTATION</td>
+					<td align='center' valign='middle' height='50px' onclick='license();'>LICENSE</td>
+				</tr>
+				<tr id='about' style='display:none'>
 					<td colspan=4>
-						This combat simulator is meant to give the likely outcome of a hostile encounter between a player and a monster (or another player.)  It is focused on fighters in a straight up hack and slash fight.  Magic, incantations, manuever and other things are not considered here.  Each fight is to the death.  Initiative is taken into account and mutual deaths are not factored into the final results.<br>
+						<h1>AD&D 1E Combat Simulator</h1>
 						<br>
-						NOTES:<br>
+						This combat simulator is meant to give the likely outcome of a hostile encounter between a player and a monster (or another player.)  It is focused on fighters in a straight up hack and slash fight.<br>
+						<br>
+						Magic, incantations, manuever and other things are not considered here.  Each fight is to the death.  Initiative is taken into account and mutual deaths are not factored into the final results.<br>
+					</td>
+				</tr>
+				<tr id='documentation' style='display:none'>
+					<td colspan=4>
 						<b>Damage Dice Sides</b> (DDS) is the number of sides the person, weapon or monster rolls when calculating damage.  You must take into account monster size when entering this information.  A 6 sided die would be entered as a "6", an 8 as "8" and so on.<br>
 						<b>Damage Dice Count</b> (DDC) is the number of the dice rolled.<br>
-						<b>Damage Plus</b> is any damage modifier to take into account.<bt>
+						<b>Damage Plus</b> is any damage modifier to take into account.<br>
 						These three will allow you the same distribution as using actual dice.  EXAMPLE: if damage is 2D8, you might be tempted to put in DDS=16 and DDC=1.  This will not result in the same damage scores as DDS=8 and DDC=2.  For best results you should simulate the dice.
 						<br>
 						<br>
 						All Fields are required.
 					</td>
 				</tr>
-				<tr>
-					<td colspan=2><b><font size='+2'>Player</font></b>&nbsp;&nbsp;&nbsp;<button onclick='save_player();'>Save</button></td>
-					<td colspan=2><b><font size='+2'>Monster</font></b>&nbsp;&nbsp;&nbsp;<button onclick='save_monster();'>Save</button></td>
+				<tr id='license' style='display:none'>
+					<td colspan=4>
+						<b>MIT License</b><br>
+						<br>
+						Copyright (c) 2018 Char-Lez Braden<br>
+						<br>
+						Permission is hereby granted, free of charge, to any person obtaining a copy
+						of this software and associated documentation files (the "Software"), to deal
+						in the Software without restriction, including without limitation the rights
+						to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+						copies of the Software, and to permit persons to whom the Software is
+						furnished to do so, subject to the following conditions:<br>
+						<br>
+						The above copyright notice and this permission notice shall be included in all
+						copies or substantial portions of the Software.<br>
+						<br>
+						THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+						IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+						FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+						AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+						LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+						OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+						SOFTWARE.
+					</td>
 				</tr>
 				<tr>
-					<td>&nbsp;&nbsp;&nbsp;Size</td><td><input id='player_size_sm' name='player_size' type='radio' value='sm' onchange='update_fight();' checked>SM&nbsp;&nbsp;&nbsp;<input id='player_size_l' name='player_size' type='radio' value='l' onchange='update_fight();'>L</td>
-					<td>&nbsp;&nbsp;&nbsp;Size</td><td><input id='monster_size_sm' name='monster_size' type='radio' value='sm' onchange='update_fight();' checked>SM&nbsp;&nbsp;&nbsp;<input id='monster_size_l' name='monster_size' type='radio' value='l' onchange='update_fight();'>L</td>
+					<td colspan=2><b><font size='+2'>Player</font></b>&nbsp;&nbsp;&nbsp;<button onclick='save_player();'>Save</button></td>
+					<td colspan=2><b><font size='+2'>Monster</font></b>&nbsp;&nbsp;&nbsp;
+						<select id='monster_list' name='player_class' onchange='monster_select();'></select>&nbsp;&nbsp;&nbsp;<button onclick='save_monster();'>Save</button></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;Class</td>
+					<td>
+						<select id='player_class' name='player_class' onchange='player_class_level();'>
+							<option value='Cleric'>Cleric</option>
+							<option value='Druid'>- Druid</option>
+							<option value='Fighter'>Fighter</option>
+							<option value='Ranger'>- Ranger</option>
+							<option value='Paladin'>- Paladin</option>
+							<option value='Magic User'>Magic User</option>
+							<option value='Illusionist'>- Illusionist</option>
+							<option value='Thief'>Thief</option>
+							<option value='Assassin'>- Assassin</option>
+							<option value='Monk'>Monk</option>
+						</select>
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;Class</td>
+					<td>
+						<select id='monster_class' name='monster_class' onchange='monster_class_level();'>
+							<option value='Cleric'>Cleric</option>
+							<option value='Druid'>- Druid</option>
+							<option value='Fighter'>Fighter</option>
+							<option value='Ranger'>- Ranger</option>
+							<option value='Paladin'>- Paladin</option>
+							<option value='Magic User'>Magic User</option>
+							<option value='Illusionist'>- Illusionist</option>
+							<option value='Thief'>Thief</option>
+							<option value='Assassin'>- Assassin</option>
+							<option value='Monk'>Monk</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;Level</td>
+					<td>
+						<select id='player_level' name='player_level' onchange='player_class_level();'>
+							<option value='1'>1</option>
+							<option value='2'>2</option>
+							<option value='3'>3</option>
+							<option value='4'>4</option>
+							<option value='5'>5</option>
+							<option value='6'>6</option>
+							<option value='7'>7</option>
+							<option value='8'>8</option>
+							<option value='9'>9</option>
+							<option value='10'>10</option>
+							<option value='11'>11</option>
+							<option value='12'>12</option>
+							<option value='13'>13</option>
+							<option value='14'>14</option>
+							<option value='15'>15</option>
+							<option value='16'>16</option>
+							<option value='17'>17</option>
+							<option value='18'>18</option>
+							<option value='19'>19</option>
+							<option value='20'>20</option>
+							<option value='21'>21</option>
+						</select>
+					</td>
+					<td>&nbsp;&nbsp;&nbsp;Level</td>
+					<td>
+						<select id='monster_level' name='monster_level' onchange='monster_class_level();'>
+							<option value='1'>1</option>
+							<option value='2'>2</option>
+							<option value='3'>3</option>
+							<option value='4'>4</option>
+							<option value='5'>5</option>
+							<option value='6'>6</option>
+							<option value='7'>7</option>
+							<option value='8'>8</option>
+							<option value='9'>9</option>
+							<option value='10'>10</option>
+							<option value='11'>11</option>
+							<option value='12'>12</option>
+							<option value='13'>13</option>
+							<option value='14'>14</option>
+							<option value='15'>15</option>
+							<option value='16'>16</option>
+							<option value='17'>17</option>
+							<option value='18'>18</option>
+							<option value='19'>19</option>
+							<option value='20'>20</option>
+							<option value='21'>21</option>
+						</select>
+					</td>
 				</tr>
 				<tr>
 					<td>&nbsp;&nbsp;&nbsp;Strength</td>
@@ -866,6 +1350,14 @@ $weapons=[{"Name":"Axe, Battle","Cost_in_GP":5,"Weight":75,"Sm_Low":1,"Sm_High":
 					</td>
 				</tr>
 				<tr>
+					<td>&nbsp;&nbsp;&nbsp;Hit&nbsp;Points</td><td><input id='player_hit_points' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Hit&nbsp;Points</td><td><input id='monster_hit_points' type='input' onKeyUp='update_fight();'></td>
+				</tr>
+				<tr>
+					<td>&nbsp;&nbsp;&nbsp;Size</td><td><input id='player_size_sm' name='player_size' type='radio' value='sm' onchange='update_fight();' checked>SM&nbsp;&nbsp;&nbsp;<input id='player_size_l' name='player_size' type='radio' value='l' onchange='update_fight();'>L</td>
+					<td>&nbsp;&nbsp;&nbsp;Size</td><td><input id='monster_size_sm' name='monster_size' type='radio' value='sm' onchange='update_fight();' checked>SM&nbsp;&nbsp;&nbsp;<input id='monster_size_l' name='monster_size' type='radio' value='l' onchange='update_fight();'>L</td>
+				</tr>
+				<tr>
 					<td>&nbsp;&nbsp;&nbsp;Weapon</td><td><select id='player_weapon' onchange='player_weapon();'><option value='-1'>Choose Weapon</option></select></td>
 					<td>&nbsp;&nbsp;&nbsp;Weapon</td><td><select id='monster_weapon' onchange='monster_weapon();'><option value='-1'>Choose Weapon</option></select></td>
 				</tr>
@@ -932,6 +1424,10 @@ $weapons=[{"Name":"Axe, Battle","Cost_in_GP":5,"Weight":75,"Sm_Low":1,"Sm_High":
 					<td>&nbsp;&nbsp;&nbsp;Dex.&nbsp;Defense&nbsp;Adjustment</td><td><input id='monster_dex_adjustment' type='input' onKeyUp='update_fight();'></td>
 				</tr>
 				<tr>
+					<td>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='player_other_ac_adjustment' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='monster_other_ac_adjustment' type='input' onKeyUp='update_fight();'></td>
+				</tr>
+				<tr>
 					<td colspan=2 valign='bottom'><b><font size='+2'>Initiative</font></b></td>
 					<td colspan=2 valign='bottom'><b><font size='+2'>Initiative</font></b></td>
 				</tr>
@@ -944,6 +1440,10 @@ $weapons=[{"Name":"Axe, Battle","Cost_in_GP":5,"Weight":75,"Sm_Low":1,"Sm_High":
 					<td>&nbsp;&nbsp;&nbsp;Weapon&nbsp;Speed</td><td><input id='monster_weapon_speed' type='input' onKeyUp='update_fight();'></td>
 				</tr>
 				<tr>
+					<td>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='player_other_initiative_adjustment' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='monster_other_initiative_adjustment' type='input' onKeyUp='update_fight();'></td>
+				</tr>
+				<tr>
 					<td colspan=2 valign='bottom'><b><font size='+2'>To&nbsp;Hit</font></b></td>
 					<td colspan=2 valign='bottom'><b><font size='+2'>To&nbsp;Hit</font></b></td>
 				</tr>
@@ -952,16 +1452,12 @@ $weapons=[{"Name":"Axe, Battle","Cost_in_GP":5,"Weight":75,"Sm_Low":1,"Sm_High":
 					<td>&nbsp;&nbsp;&nbsp;THACO</td><td><input id='monster_thaco' type='input' onKeyUp='update_fight();'></td>
 				</tr>
 				<tr>
-					<td>&nbsp;&nbsp;&nbsp;Str.&nbsp;To&nbsp;Hit&nbsp;Adj.</td><td><input id='player_str_adjustment' type='input' onKeyUp='update_fight();'></td>
-					<td>&nbsp;&nbsp;&nbsp;Str.&nbsp;To&nbsp;Hit&nbsp;Adj.</td><td><input id='monster_str_adjustment' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Str.&nbsp;To&nbsp;Hit&nbsp;Adjustment</td><td><input id='player_str_adjustment' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Str.&nbsp;To&nbsp;Hit&nbsp;Adjustment</td><td><input id='monster_str_adjustment' type='input' onKeyUp='update_fight();'></td>
 				</tr>
 				<tr>
-					<td colspan=2 valign='bottom'><b><font size='+2'>Hit&nbsp;Points</font></b></td>
-					<td colspan=2 valign='bottom'><b><font size='+2'>Hit&nbsp;Points</font></b></td>
-				</tr>
-				<tr>
-					<td>&nbsp;&nbsp;&nbsp;Hit&nbsp;Points</td><td><input id='player_hit_points' type='input' onKeyUp='update_fight();'></td>
-					<td>&nbsp;&nbsp;&nbsp;Hit&nbsp;Points</td><td><input id='monster_hit_points' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='player_other_thaco_adjustment' type='input' onKeyUp='update_fight();'></td>
+					<td>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='monster_other_thaco_adjustment' type='input' onKeyUp='update_fight();'></td>
 				</tr>
 				<tr>
 					<td colspan=2 valign='bottom'><b><font size='+2'>Hit&nbsp;Dice</font></b></td>
