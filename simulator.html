@@ -8,6 +8,8 @@
 		-->
 		<title>AD&D Combat simulator</title>
 		<style>
+			.danger {color: red;}
+			
 			.enter_data {background-color: #e6ffe6; border: 1px solid;}
 			
 			.header {padding-top: 10px;}
@@ -16,7 +18,7 @@
 			
 			.out {color: #b7b7b7;}
 			
-			.subhead {padding-bottom: 10px;}
+			.subhead {padding-bottom: 10px; padding-right: 4px;}
 			
 			/*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
@@ -414,8 +416,10 @@ $experience=[
 
 			//
 			//
-			$( document ).ready(function()
+			$(document).ready(function()
 			{
+				console.log('ready');
+				//
 				var $menu;
 				var $k;
 				var $option;
@@ -449,12 +453,31 @@ $experience=[
 				}
 				//
 				// Set initial values
-				player_class_level();
-				player_str();
-				player_dex();
-				player_weapon();
-				player_experience();
+				player_type();
+				monster_type();
+				//
+				console.log('----');
+				//
+				return;
 			});
+			//
+			//
+			function off($name)
+			{
+				$('#'+$name).addClass('hide');
+				$('#'+$name+"_header").addClass('out');
+				//
+				return;
+			} //  off()
+			//
+			//
+			function on($name)
+			{
+				$('#'+$name).removeClass('hide');
+				$('#'+$name+"_header").removeClass('out');
+				//
+				return;
+			} //  on()
 			//
 			//
 			function get_dice($low, $high)
@@ -495,6 +518,8 @@ $experience=[
 			//
 			function get_to_hit($class, $level, $opponent_ac)
 			{
+				console.log("get_to_hit("+$class+", "+$level+", "+$opponent_ac+")");
+				//
 				var $to_hit;
 				var $level_lable;
 				//
@@ -524,8 +549,10 @@ $experience=[
 			} // get_to_hit()
 			//
 			//
-			function player_class_level()
+			function player_class_level($update)
 			{
+				console.log('player_class_level('+$update+')');
+				//
 				var $class;
 				var $level;
 				var $to_hit;
@@ -535,20 +562,38 @@ $experience=[
 				$level=$('#player_level').val();
 				$opponent_ac=$('#monster_ac').val();
 				//
-				$to_hit=get_to_hit($class, $level, $opponent_ac);
+				//
+				// Has everything been set?
+				if (($class!=='?') && ($level!=='?') && ($opponent_ac!=='?'))
+				{
+					// Yes, it has all been set
+					//
+					$to_hit=get_to_hit($class, $level, $opponent_ac);
+				}
+				else
+				{
+					// No, has not all been set
+					//
+					$to_hit='?';
+				} // if (($class!=='?') && ($level!=='?') && ($opponent_ac!=='?'))
 				//
 				$('#player_to_hit_base').val($to_hit);
 				//
-				player_str();
+				if (($class!=='?') && ($level!=='?'))
+				{
+					player_experience(false);
+				}
 				//
-				player_experience();
+				if ($update===true) {update_fight();}
 				//
 				return;
 			} // player_class_level()
 			//
 			//
-			function player_dex()
+			function player_dex($update)
 			{
+				console.log('player_dex('+$update+')');
+				//
 				var $dex;
 				var $react;
 				var $defense;
@@ -556,44 +601,82 @@ $experience=[
 				$react=0;
 				$defense=0
 				//
-				$dex=parseInt($('#player_dexterity').val());
+				$dex=$('#player_dexterity').val();
 				//
-				if ($dex===3) {$react=-3; $defense=4;}
-				if ($dex===4) {$react=-2; $defense=3;}
-				if ($dex===5) {$react=-1; $defense=2;}
-				if ($dex===6) {$defense=1;}
-				if ($dex===15) {$defense=-1;}
-				if ($dex===16) {$react=1; $defense=-2;}
-				if ($dex===17) {$react=2; $defense=-3;}
-				if ($dex===18) {$react=3; $defense=-4;}
+				// Has dex been set?
+				if ($dex!=='?')
+				{
+					// Yes, has been set
+					//
+					$dex=parseInt($('#player_dexterity').val());
+					//
+					if ($dex===3) {$react=-3; $defense=4;}
+					if ($dex===4) {$react=-2; $defense=3;}
+					if ($dex===5) {$react=-1; $defense=2;}
+					if ($dex===6) {$defense=1;}
+					if ($dex===15) {$defense=-1;}
+					if ($dex===16) {$react=1; $defense=-2;}
+					if ($dex===17) {$react=2; $defense=-3;}
+					if ($dex===18) {$react=3; $defense=-4;}
+				}
+				else
+				{
+					// No, has not been set
+					//
+					$react='?';
+					$defense='?';
+				}
 				//
 				$('#player_initiative_dex_adjustment').val($react);
 				$('#player_ac_dex_adjustment').val($defense);
+				//
+				if ($update===true) {update_fight();}
 				//
 				return;
 			} // player_dex()
 			//
 			//
-			function player_experience()
+			function player_experience($update)
 			{
+				console.log('player_experience('+$update+')');
+				//
 				var $level;
 				var $base;
 				var $per_hp;
 				//
 				$level=$('#player_level').val();
 				//
-				$base=$experience[$level].base;
-				$per_hp=$experience[$level].per_hp;
+				// Has level been set?
+				if ($level==='?')
+				{
+					// No, has not been set
+					//
+					$base='?';
+					$per_hp='?';
+				}
+				else
+				{
+					// Yes, has been set
+					//
+					$level=parseInt($('#player_level').val());
+					//
+					$base=$experience[$level-1].base;
+					$per_hp=$experience[$level-1].per_hp;
+				} // if ($level==='?')
 				//
 				$('#player_xp_base').val($base);
 				$('#player_xp_per_hp').val($per_hp);
+				//
+				if ($update===true) {update_fight();}
 				//
 				return;
 			} // player_experience()
 			//
 			//
-			function player_str()
+			function player_str($update)
 			{
+				console.log('player_str('+$update+')');
+				//
 				var $class;
 				var $str;
 				var $percent;
@@ -605,99 +688,123 @@ $experience=[
 				$hit_prob=0;
 				$damage_adj=0
 				//
-				$str=parseInt($('#player_strength').val());
-				$class=$('#player_class').val();
+				$str=$('#player_strength').val();
 				//
-				if ($str===3) {$hit_prob=-3; $damage_adj=-1;}
-				if ($str===4) {$hit_prob=-2; $damage_adj=-1;}
-				if ($str===5) {$hit_prob=-2;}
-				if ($str===6) {$hit_prob=-1;}
-				if ($str===7) {$hit_prob=-1;}
-				if ($str===6) {$defense=1;}
-				if ($str===16) {$damage_adj=1;}
-				if ($str===17) {$hit_prob=1; $damage_adj=1;}
-				if ($str===18)
+				// Has strength been set?
+				if ($str!=='?')
 				{
+					// Yes, has been set
+					//
+					$str=parseInt($('#player_strength').val());
+					$class=$('#player_class').val();
+					//
+					if ($str===3) {$hit_prob=-3; $damage_adj=-1;}
+					if ($str===4) {$hit_prob=-2; $damage_adj=-1;}
+					if ($str===5) {$hit_prob=-2;}
+					if ($str===6) {$hit_prob=-1;}
+					if ($str===7) {$hit_prob=-1;}
+					if ($str===6) {$defense=1;}
+					if ($str===16) {$damage_adj=1;}
+					if ($str===17) {$hit_prob=1; $damage_adj=1;}
+					if ($str===18)
+					{
+						if (($class=='Fighter') || ($class=='Ranger') || ($class=='Paladin'))
+						{
+							$('#player_strength_percent').removeClass('hide');
+							$percent=$('#player_strength_percent').val();
+							//
+							if ($percent=='01-50') {$hit_prob=1; $damage_adj=3;}
+							if ($percent=='51-75') {$hit_prob=2; $damage_adj=3;}
+							if ($percent=='76-90') {$hit_prob=2; $damage_adj=4;}
+							if ($percent=='91-99') {$hit_prob=2; $damage_adj=5;}
+							if ($percent=='100') {$hit_prob=3; $damage_adj=6;}
+						}
+						else
+						{
+							$('#player_strength_percent').addClass('hide');
+							$hit_prob=1;
+							$damage_adj=3;
+						}
+					}
+					//
 					if (($class=='Fighter') || ($class=='Ranger') || ($class=='Paladin'))
 					{
-						$('#player_strength_percent').css('display', 'inline');
-						$percent=$('#player_strength_percent').val();
-						//
-						if ($percent=='01-50') {$hit_prob=1; $damage_adj=3;}
-						if ($percent=='51-75') {$hit_prob=2; $damage_adj=3;}
-						if ($percent=='76-90') {$hit_prob=2; $damage_adj=4;}
-						if ($percent=='91-99') {$hit_prob=2; $damage_adj=5;}
-						if ($percent=='100') {$hit_prob=3; $damage_adj=6;}
-					}
-					else
-					{
-						$('#player_strength_percent').css('display', 'none');
-						$hit_prob=1;
-						$damage_adj=3;
+						if ($str=>16)
+						{
+							$xp_bonus=true;
+						}
 					}
 				}
-				//
-				if (($class=='Fighter') || ($class=='Ranger') || ($class=='Paladin'))
+				else
 				{
-					if ($str=>16)
-					{
-						$xp_bonus=true;
-					}
-				}
+					// No, has not been set
+					//
+					$hit_prob='?';
+					$damage_adj='?';
+				} // if ($str!=='?')
 				//
 				$('#player_to_hit_str_adjustment').val($hit_prob);
-				$('#player_hit_dice_strength_adjustment').val($damage_adj);
+				$('#player_weapon_damage_strength_adjustment').val($damage_adj);
+				//
+				if ($update===true) {update_fight();}
 				//
 				return;
 			} // player_str()
 			//
 			//
-			function player_select()
+			function player_select($update)
 			{
+				console.log('player_select('+$update+')');
+				//
 				var $idx;
 				var $x;
 				//
-				$idx=$('#player_list').val();
+				$idx=parseInt($('#player_list').val());
 				//
-				$x=$monsters[$idx].thac0;
-				$('#player_to_hit_base').val($x);
-				//
-				$x=$monsters[$idx].xp_base;
-				$('#player_xp_base').val($x);
-				//
-				$x=$monsters[$idx].xp_plus;
-				$('#player_xp_per_hp').val($x);
-				//
-				$x=$monsters[$idx].size;
-				if (($x=='S') || ($x=='M'))
+				if ($idx!==-1)
 				{
-					$("#player_size_sm").prop("checked", true);
+					$x=$monsters[$idx].thac0;
+					$('#player_to_hit_base').val($x);
+					//
+					$x=$monsters[$idx].xp_base;
+					$('#player_xp_base').val($x);
+					//
+					$x=$monsters[$idx].xp_plus;
+					$('#player_xp_per_hp').val($x);
+					//
+					$x=$monsters[$idx].size;
+					if (($x=='S') || ($x=='M'))
+					{
+						$("#player_size_sm").prop("checked", true);
+					}
+					else
+					{
+						$("#player_size_l").prop("checked", true);
+					}
+					//
+					$x=$monsters[$idx].armor_class;
+					$('#player_ac').val($x);
+					//
+					$x=$monsters[$idx].hit_dice;
+					$x=$x.split('+');
+					if ($x.length==1)
+					{
+						$('#player_hit_dice_count').val($x[0]);
+						$('#player_damage_dice_plus').val(0);
+						$x=roll(8, parseInt($x[0]));
+					}
+					else
+					{
+						$('#playr_damage_dice_count').val($x[0]);
+						$('#player_hit_dice_plus').val($x[1]);
+						$x=roll(8, parseInt($x[0]))+parseInt($x[1]);
+					}
+					$('#player_hit_points').val($x);
+					//
+					$('#player_hit_dice_sides').val(8);
+					//
+					if ($update===true) {update_fight();}
 				}
-				else
-				{
-					$("#player_size_l").prop("checked", true);
-				}
-				//
-				$x=$monsters[$idx].armor_class;
-				$('#player_ac').val($x);
-				//
-				$x=$monsters[$idx].hit_dice;
-				$x=$x.split('+');
-				if ($x.length==1)
-				{
-					$('#player_hit_dice_count').val($x[0]);
-					$('#player_damage_dice_plus').val(0);
-					$x=roll(8, parseInt($x[0]));
-				}
-				else
-				{
-					$('#playr_damage_dice_count').val($x[0]);
-					$('#player_hit_dice_plus').val($x[1]);
-					$x=roll(8, parseInt($x[0]))+parseInt($x[1]);
-				}
-				$('#player_hit_points').val($x);
-				//
-				$('#player_hit_dice_sides').val(8);
 				//
 				return;
 			} // player_select()
@@ -705,53 +812,117 @@ $experience=[
 			//
 			function player_type()
 			{
+				console.log('player_type()');
+				//
+				// User has picked character or creature
+				//
 				var $character;
 				//
 				$character=$('#player_type_character').prop("checked");
 				//
+				// Is this a character?
 				if ($character===true)
 				{
+					// Yes, a character
+					//
 					$('#player_list').addClass('hide');
-					$('#player_class_header').removeClass('out');
-					$('#player_class').removeClass('hide');
-					$('#player_level_header').removeClass('out');
-					$('#player_level').removeClass('hide');
-					$('#player_strength_header').removeClass('out');
-					$('#player_strength').removeClass('hide');
-					$('#player_dexterity_heder').removeClass('out');
-					$('#player_dexterity').removeClass('hide');
-					$('#player_dexterity_heder').removeClass('out');
+					//
+					on('player_class');
+					on('player_level');
+					on('player_strength');
+					on('player_dexterity');
+					off('player_size');
 					$('#player_size_buttons').addClass('hide');
-					$('#player_ac_dex_adjustment').removeClass('hide');
-					$('#player_initiative_weapon_speed').removeClass('hide');
-					$('#player_initiative_dex_adjustment').addClass('hide');
-					$('#player_weapon_damage_dice_count').addClass('hide');
-					$('#player_weapon_damage_dice_sides').addClass('hide');
-					$('#player_weapon_damage_dice_plus').addClass('hide');
-					$('#').addClass('hide');
-					$('#').addClass('hide');
+					on('player_weapon');
+					on('player_ac_dex_adjustment');
+					on('player_initiative_weapon_speed');
+					on('player_initiative_dex_adjustment');
+					//
+					off('player_hit_dice_count');
+					off('player_hit_dice_sides');
+					off('player_hit_dice_plus');
+					//
+					off('player_weapon_damage_dice_count');
+					off('player_weapon_damage_dice_sides');
+					off('player_weapon_damage_dice_plus');
+					off('player_weapon_damage_strength_adjustment');
+					//
+					$('#player_hit_points').val('?');
+					$('#player_ac').val('?');
+					$('#player_ac_other_adjustment').val('?');
+					$('#player_ac_dex_adjustment').val('?');
+					$('#player_xp_base').val('?');
+					$('#player_xp_per_hp').val('?');
+					//
+					player_class_level(false);
+					player_dex(false);
+					player_str(false);
+					player_weapon(false);
 				}
 				else
 				{
+					// No, not a character, a creature
+					//
 					$('#player_list').removeClass('hide');
-					$('#').removeClass('hide');
-					$('#').removeClass('hide');
-					$('#').removeClass('hide');
-					$('#').removeClass('hide');
-					$('#').removeClass('hide');
-					$('#').removeClass('hide');
-					$('#').removeClass('hide');
-					$('#').removeClass('hide');
-					$('#').removeClass('hide');
-					$('#').removeClass('hide');
+					//
+					off('player_class');
+					off('player_level');
+					off('player_strength');
+					off('player_dexterity');
+					on('player_size');
+					$('#player_size_buttons').removeClass('hide');
+					$("#player_size_sm").prop("checked", false);
+					$("#player_size_l").prop("checked", false);
+					//
+					off('player_weapon');
+					//
+					off('player_ac_dex_adjustment');
+					//
+					on('player_initiative_other_adjustment');
+					off('player_initiative_weapon_speed');
+					off('player_initiative_dex_adjustment');
+					//
+					on('player_to_hit_base');
+					on('player_to_hit_other_adjustment');
+					off('player_to_hit_weapon_adjustment');
+					off('player_to_hit_str_adjustment');
+					//
+					on('player_hit_dice_count');
+					on('player_hit_dice_sides');
+					on('player_hit_dice_plus');
+					//
+					off('player_weapon_damage_dice_count');
+					off('player_weapon_damage_dice_sides');
+					off('player_weapon_damage_dice_plus');
+					off('player_weapon_damage_strength_adjustment');
+					//
+					$('#player_initiative_unarmed').addClass('hide');
+					$('#player_to_hit_unarmed').addClass('hide');
+					$('#player_damage_unarmed').addClass('hide');
+					//
+					$('#player_hit_points').val('?');
+					$('#player_ac').val('?');
+					$('#player_ac_other_adjustment').val('?');
+					$('#player_initiative_other_adjustment').val('?');
+					$('#player_to_hit_base').val('?');
+					$('#player_to_hit_other_adjustment').val('?');
+					$('#player_hit_dice_count').val('?');
+					$('#player_hit_dice_sides').val('?');
+					$('#player_hit_dice_plus').val('?');
+					$('#player_xp_base').val('?');
+					$('#player_xp_per_hp').val('?');
 				} // if ($character===true)
+				//
+				update_fight();
 				//
 				return;
 			} // player_type()
 			//
 			//
-			function player_weapon()
+			function player_weapon($update)
 			{
+				console.log('player_weapon('+$update+')');
+				//
 				var $ac;
 				var $adjustment;
 				var $dice;
@@ -760,7 +931,10 @@ $experience=[
 				var $high;
 				var $speed;
 				var $character;
+				var $opponent_ac;
 				var $opponent_size;
+				var $to_hit_adjustment;
+				var $key;
 				//
 				$id=$('#player_weapon').val();
 				//
@@ -769,57 +943,23 @@ $experience=[
 				{
 					// No weapon
 					//
-					$('#player_weapon_damage_dice_count').val('');
-					$('#player_weapon_damage_dice_sides').val('');
-					$('#player_weapon_damage_dice_plus').val('');
+					off('player_initiative_other_adjustment');
+					off('player_initiative_weapon_speed');
+					off('player_initiative_dex_adjustment');
 					//
-					$('#player_weapon_damage_dice_count_header').addClass('out');
-					$('#player_weapon_damage_dice_sides_header').addClass('out');
-					$('#player_weapon_damage_dice_plus_header').addClass('out');
+					off('player_to_hit_base');
+					off('player_to_hit_other_adjustment');
+					off('player_to_hit_weapon_adjustment');
+					off('player_to_hit_str_adjustment');
 					//
-					$('#player_weapon_damage_dice_count').addClass('hide');
-					$('#player_weapon_damage_dice_sides').addClass('hide');
-					$('#player_weapon_damage_dice_plus').addClass('hide');
+					off('player_weapon_damage_dice_count');
+					off('player_weapon_damage_dice_sides');
+					off('player_weapon_damage_dice_plus');
+					off('player_weapon_damage_strength_adjustment');
 					//
-					//
-					$character=$('#player_type_character').prop("checked");
-					//
-					// Is this a character?
-					if ($character===true)
-					{
-						// Yes, a character
-						//
-						// Weapon adjustments for fist from Unearthed Arcana
-						//
-						$('#player_initiative_weapon_speed').val('2');
-						//
-						$ac=$('#monster_ac').val();
-						if ($ac<=0) {$adjustment=-9;}
-						if ($ac==1) {$adjustment=-8;}
-						if ($ac==2) {$adjustment=-7;}
-						if ($ac==3) {$adjustment=-5;}
-						if ($ac==4) {$adjustment=-3;}
-						if ($ac==5) {$adjustment=-1;}
-						if ($ac==6) {$adjustment=0;}
-						if ($ac==7) {$adjustment=0;}
-						if ($ac==8) {$adjustment=2;}
-						if ($ac==9) {$adjustment=0;}
-						if ($ac==10) {$adjustment=4;}
-						//
-						$('#player_to_hit_weapon_adjustment').val($adjustment);
-					}
-					else
-					{
-						// No, a creature
-						//
-						$('#player_hit_dice_count_header').removeClass('out');
-						$('#player_hit_dice_sides_header').removeClass('out');
-						$('#player_hit_dice_plus_header').removeClass('out');
-						//
-						$('#player_hit_dice_count').removeClass('hide');
-						$('#player_hit_dice_sides').removeClass('hide');
-						$('#player_hit_dice_plus').removeClass('hide');
-					} // if ($character===true)
+					$('#player_initiative_unarmed').removeClass('hide');
+					$('#player_to_hit_unarmed').removeClass('hide');
+					$('#player_damage_unarmed').removeClass('hide');
 				}
 				else
 				{
@@ -844,26 +984,48 @@ $experience=[
 					//
 					$dice=get_dice($low, $high);
 					//
-					$('#player_hit_dice_count_header').addClass('out');
-					$('#player_hit_dice_sides_header').addClass('out');
-					$('#player_hit_dice_plus_header').addClass('out');
+					$opponent_ac=$('#monster_ac').val();
+					if ($opponent_ac!=='?')
+					{
+						$opponent_ac=parseInt($('#monster_ac').val());
+						//
+						if ($opponent_ac<2) {$opponent_ac=2;}
+						//
+						$key='AC_'+$opponent_ac;
+						$to_hit_adjustment=$weapons[$id][$key];
+					}
+					else
+					{
+						$to_hit_adjustment='?';
+					}
 					//
-					$('#player_hit_dice_count').addClass('hide');
-					$('#player_hit_dice_sides').addClass('hide');
-					$('#player_hit_dice_plus').addClass('hide');
+					$('#player_to_hit_weapon_adjustment').val($to_hit_adjustment);
 					//
-					$('#player_weapon_damage_dice_count_header').removeClass('out');
-					$('#player_weapon_damage_dice_sides_header').removeClass('out');
-					$('#player_weapon_damage_dice_plus_header').removeClass('out');
+					on('player_initiative_other_adjustment');
+					on('player_initiative_weapon_speed');
+					on('player_initiative_dex_adjustment');
 					//
-					$('#player_weapon_damage_dice_count').removeClass('hide');
-					$('#player_weapon_damage_dice_sides').removeClass('hide');
-					$('#player_weapon_damage_dice_plus').removeClass('hide');
+					on('player_to_hit_base');
+					on('player_to_hit_other_adjustment');
+					on('player_to_hit_weapon_adjustment');
+					on('player_to_hit_str_adjustment');
+					//
+					on('player_weapon_damage_dice_count');
+					on('player_weapon_damage_dice_sides');
+					on('player_weapon_damage_dice_plus');
+					on('player_weapon_damage_adjustment');
+					on('player_weapon_damage_strength_adjustment');
 					//
 					$('#player_weapon_damage_dice_count').val($dice.count);
 					$('#player_weapon_damage_dice_sides').val($dice.sides);
 					$('#player_weapon_damage_dice_plus').val($dice.plus);
+					//
+					$('#player_initiative_unarmed').addClass('hide');
+					$('#player_to_hit_unarmed').addClass('hide');
+					$('#player_damage_unarmed').addClass('hide');
 				} // if ($id==-1)
+				//
+				if ($update===true) {update_fight();}
 				//
 				return;
 			} // player_weapon()
@@ -912,6 +1074,7 @@ $experience=[
 			} // player_save()
 			//
 			//
+			/*
 			function monster_class_level()
 			{
 				var $class;
@@ -1071,6 +1234,65 @@ $experience=[
 			} // monster_select()
 			//
 			//
+			function monster_type()
+			{
+				var $character;
+				//
+				$character=$('#monster_type_character').prop("checked");
+				//
+				// Is this a character?
+				if ($character===true)
+				{
+					// Yes, a character
+					//
+					$('#monster_list').addClass('hide');
+					//
+					on('monster_class');
+					on('monster_level');
+					on('monster_strength');
+					on('monster_dexterity');
+					off('monster_size');
+					$('#monster_size_buttons').addClass('hide');
+					on('monster_weapon');
+					on('monster_ac_dex_adjustment');
+					on('monster_initiative_weapon_speed');
+					on('monster_initiative_dex_adjustment');
+					off('monster_weapon_damage_dice_count');
+					off('monster_weapon_damage_dice_sides');
+					off('monster_weapon_damage_dice_plus');
+				}
+				else
+				{
+					// No, not a character, a creature
+					//
+					$('#monster_list').removeClass('hide');
+					//
+					off('monster_class');
+					off('monster_level');
+					off('monster_strength');
+					off('monster_dexterity');
+					on('monster_size');
+					$('#monster_size_buttons').removeClass('hide');
+					off('monster_weapon');
+					off('monster_ac_dex_adjustment');
+					off('monster_initiative_weapon_speed');
+					off('monster_initiative_dex_adjustment');
+					off('monster_to_hit_str_adjustment');
+					on('monster_weapon_damage_dice_count');
+					on('monster_weapon_damage_dice_sides');
+					on('monster_weapon_damage_dice_plus');
+					off('monster_weapon_damage_strength_adjustment');
+					//
+					$('#monster_weapon').val('-1');
+					//
+					monster_select();
+					monster_weapon();
+				} // if ($character===true)
+				//
+				return;
+			} // monster_type()
+			//
+			//
 			function monster_weapon()
 			{
 				var $ac;
@@ -1185,6 +1407,489 @@ $experience=[
 					$('#monster_weapon_damage_dice_sides').val($dice.sides);
 					$('#monster_weapon_damage_dice_plus').val($dice.plus);
 				} // if ($id==-1)
+				//
+				return;
+			} // monster_weapon()
+			*/
+			//
+			//
+			function monster_class_level($update)
+			{
+				console.log('monster_class_level('+$update+')');
+				//
+				var $class;
+				var $level;
+				var $to_hit;
+				var $opponent_ac;
+				//
+				$class=$('#monster_class').val();
+				$level=$('#monster_level').val();
+				$opponent_ac=$('#monster_ac').val();
+				//
+				//
+				// Has everything been set?
+				if (($class!=='?') && ($level!=='?') && ($opponent_ac!=='?'))
+				{
+					// Yes, it has all been set
+					//
+					$to_hit=get_to_hit($class, $level, $opponent_ac);
+				}
+				else
+				{
+					// No, has not all been set
+					//
+					$to_hit='?';
+				} // if (($class!=='?') && ($level!=='?') && ($opponent_ac!=='?'))
+				//
+				$('#monster_to_hit_base').val($to_hit);
+				//
+				if (($class!=='?') && ($level!=='?'))
+				{
+					monster_experience(false);
+				}
+				//
+				if ($update===true) {update_fight();}
+				//
+				return;
+			} // monster_class_level()
+			//
+			//
+			function monster_dex($update)
+			{
+				console.log('monster_dex('+$update+')');
+				//
+				var $dex;
+				var $react;
+				var $defense;
+				//
+				$react=0;
+				$defense=0
+				//
+				$dex=$('#monster_dexterity').val();
+				//
+				// Has dex been set?
+				if ($dex!=='?')
+				{
+					// Yes, has been set
+					//
+					$dex=parseInt($('#monster_dexterity').val());
+					//
+					if ($dex===3) {$react=-3; $defense=4;}
+					if ($dex===4) {$react=-2; $defense=3;}
+					if ($dex===5) {$react=-1; $defense=2;}
+					if ($dex===6) {$defense=1;}
+					if ($dex===15) {$defense=-1;}
+					if ($dex===16) {$react=1; $defense=-2;}
+					if ($dex===17) {$react=2; $defense=-3;}
+					if ($dex===18) {$react=3; $defense=-4;}
+				}
+				else
+				{
+					// No, has not been set
+					//
+					$react='?';
+					$defense='?';
+				}
+				//
+				$('#monster_initiative_dex_adjustment').val($react);
+				$('#monster_ac_dex_adjustment').val($defense);
+				//
+				if ($update===true) {update_fight();}
+				//
+				return;
+			} // monster_dex()
+			//
+			//
+			function monster_experience($update)
+			{
+				console.log('monster_experience('+$update+')');
+				//
+				var $level;
+				var $base;
+				var $per_hp;
+				//
+				$level=$('#monster_level').val();
+				//
+				// Has level been set?
+				if ($level==='?')
+				{
+					// No, has not been set
+					//
+					$base='?';
+					$per_hp='?';
+				}
+				else
+				{
+					// Yes, has been set
+					//
+					$level=parseInt($('#monster_level').val());
+					//
+					$base=$experience[$level-1].base;
+					$per_hp=$experience[$level-1].per_hp;
+				} // if ($level==='?')
+				//
+				$('#monster_xp_base').val($base);
+				$('#monster_xp_per_hp').val($per_hp);
+				//
+				if ($update===true) {update_fight();}
+				//
+				return;
+			} // monster_experience()
+			//
+			//
+			function monster_str($update)
+			{
+				console.log('monster_str('+$update+')');
+				//
+				var $class;
+				var $str;
+				var $percent;
+				var $hit_prob;
+				var $damage_adj;
+				var $xp_bonus;
+				//
+				$xp_bonus=false;
+				$hit_prob=0;
+				$damage_adj=0
+				//
+				$str=$('#monster_strength').val();
+				//
+				// Has strength been set?
+				if ($str!=='?')
+				{
+					// Yes, has been set
+					//
+					$str=parseInt($('#monster_strength').val());
+					$class=$('#monster_class').val();
+					//
+					if ($str===3) {$hit_prob=-3; $damage_adj=-1;}
+					if ($str===4) {$hit_prob=-2; $damage_adj=-1;}
+					if ($str===5) {$hit_prob=-2;}
+					if ($str===6) {$hit_prob=-1;}
+					if ($str===7) {$hit_prob=-1;}
+					if ($str===6) {$defense=1;}
+					if ($str===16) {$damage_adj=1;}
+					if ($str===17) {$hit_prob=1; $damage_adj=1;}
+					if ($str===18)
+					{
+						if (($class=='Fighter') || ($class=='Ranger') || ($class=='Paladin'))
+						{
+							$('#monster_strength_percent').removeClass('hide');
+							$percent=$('#monster_strength_percent').val();
+							//
+							if ($percent=='01-50') {$hit_prob=1; $damage_adj=3;}
+							if ($percent=='51-75') {$hit_prob=2; $damage_adj=3;}
+							if ($percent=='76-90') {$hit_prob=2; $damage_adj=4;}
+							if ($percent=='91-99') {$hit_prob=2; $damage_adj=5;}
+							if ($percent=='100') {$hit_prob=3; $damage_adj=6;}
+						}
+						else
+						{
+							$('#monster_strength_percent').addClass('hide');
+							$hit_prob=1;
+							$damage_adj=3;
+						}
+					}
+					//
+					if (($class=='Fighter') || ($class=='Ranger') || ($class=='Paladin'))
+					{
+						if ($str=>16)
+						{
+							$xp_bonus=true;
+						}
+					}
+				}
+				else
+				{
+					// No, has not been set
+					//
+					$hit_prob='?';
+					$damage_adj='?';
+				} // if ($str!=='?')
+				//
+				$('#monster_to_hit_str_adjustment').val($hit_prob);
+				$('#monster_weapon_damage_strength_adjustment').val($damage_adj);
+				//
+				if ($update===true) {update_fight();}
+				//
+				return;
+			} // monster_str()
+			//
+			//
+			function monster_select($update)
+			{
+				console.log('monster_select('+$update+')');
+				//
+				var $idx;
+				var $x;
+				//
+				$idx=parseInt($('#monster_list').val());
+				//
+				if ($idx!==-1)
+				{
+					$x=$monsters[$idx].thac0;
+					$('#monster_to_hit_base').val($x);
+					//
+					$x=$monsters[$idx].xp_base;
+					$('#monster_xp_base').val($x);
+					//
+					$x=$monsters[$idx].xp_plus;
+					$('#monster_xp_per_hp').val($x);
+					//
+					$x=$monsters[$idx].size;
+					if (($x=='S') || ($x=='M'))
+					{
+						$("#monster_size_sm").prop("checked", true);
+					}
+					else
+					{
+						$("#monster_size_l").prop("checked", true);
+					}
+					//
+					$x=$monsters[$idx].armor_class;
+					$('#monster_ac').val($x);
+					//
+					$x=$monsters[$idx].hit_dice;
+					$x=$x.split('+');
+					if ($x.length==1)
+					{
+						$('#monster_hit_dice_count').val($x[0]);
+						$('#monster_damage_dice_plus').val(0);
+						$x=roll(8, parseInt($x[0]));
+					}
+					else
+					{
+						$('#monstr_damage_dice_count').val($x[0]);
+						$('#monster_hit_dice_plus').val($x[1]);
+						$x=roll(8, parseInt($x[0]))+parseInt($x[1]);
+					}
+					$('#monster_hit_points').val($x);
+					//
+					$('#monster_hit_dice_sides').val(8);
+				}
+				//
+				if ($update===true) {update_fight();}
+				//
+				return;
+			} // monster_select()
+			//
+			//
+			function monster_type()
+			{
+				console.log('monster_type()');
+				//
+				// User has picked character or creature
+				//
+				var $character;
+				//
+				$character=$('#monster_type_character').prop("checked");
+				//
+				// Is this a character?
+				if ($character===true)
+				{
+					// Yes, a character
+					//
+					$('#monster_list').addClass('hide');
+					//
+					on('monster_class');
+					on('monster_level');
+					on('monster_strength');
+					on('monster_dexterity');
+					off('monster_size');
+					$('#monster_size_buttons').addClass('hide');
+					on('monster_weapon');
+					on('monster_ac_dex_adjustment');
+					on('monster_initiative_weapon_speed');
+					on('monster_initiative_dex_adjustment');
+					//
+					off('monster_hit_dice_count');
+					off('monster_hit_dice_sides');
+					off('monster_hit_dice_plus');
+					//
+					off('monster_weapon_damage_dice_count');
+					off('monster_weapon_damage_dice_sides');
+					off('monster_weapon_damage_dice_plus');
+					off('monster_weapon_damage_strength_adjustment');
+					//
+					$('#monster_hit_points').val('?');
+					$('#monster_ac').val('?');
+					$('#monster_ac_other_adjustment').val('?');
+					$('#monster_ac_dex_adjustment').val('?');
+					$('#monster_xp_base').val('?');
+					$('#monster_xp_per_hp').val('?');
+					//
+					monster_class_level(false);
+					monster_dex(false);
+					monster_str(false);
+					monster_weapon(false);
+				}
+				else
+				{
+					// No, not a character, a creature
+					//
+					$('#monster_list').removeClass('hide');
+					//
+					off('monster_class');
+					off('monster_level');
+					off('monster_strength');
+					off('monster_dexterity');
+					on('monster_size');
+					$('#monster_size_buttons').removeClass('hide');
+					$("#monster_size_sm").prop("checked", false);
+					$("#monster_size_l").prop("checked", false);
+					//
+					off('monster_weapon');
+					//
+					off('monster_ac_dex_adjustment');
+					//
+					on('monster_initiative_other_adjustment');
+					off('monster_initiative_weapon_speed');
+					off('monster_initiative_dex_adjustment');
+					//
+					on('monster_to_hit_base');
+					on('monster_to_hit_other_adjustment');
+					off('monster_to_hit_weapon_adjustment');
+					off('monster_to_hit_str_adjustment');
+					//
+					on('monster_hit_dice_count');
+					on('monster_hit_dice_sides');
+					on('monster_hit_dice_plus');
+					//
+					off('monster_weapon_damage_dice_count');
+					off('monster_weapon_damage_dice_sides');
+					off('monster_weapon_damage_dice_plus');
+					off('monster_weapon_damage_strength_adjustment');
+					//
+					$('#monster_initiative_unarmed').addClass('hide');
+					$('#monster_to_hit_unarmed').addClass('hide');
+					$('#monster_damage_unarmed').addClass('hide');
+					//
+					$('#monster_hit_points').val('?');
+					$('#monster_ac').val('?');
+					$('#monster_ac_other_adjustment').val('?');
+					$('#monster_initiative_other_adjustment').val('?');
+					$('#monster_to_hit_base').val('?');
+					$('#monster_to_hit_other_adjustment').val('?');
+					$('#monster_hit_dice_count').val('?');
+					$('#monster_hit_dice_sides').val('?');
+					$('#monster_hit_dice_plus').val('?');
+					$('#monster_xp_base').val('?');
+					$('#monster_xp_per_hp').val('?');
+				} // if ($character===true)
+				//
+				update_fight();
+				//
+				return;
+			} // monster_type()
+			//
+			//
+			function monster_weapon($update)
+			{
+				console.log('monster_weapon('+$update+')');
+				//
+				var $ac;
+				var $adjustment;
+				var $dice;
+				var $id;
+				var $low;
+				var $high;
+				var $speed;
+				var $character;
+				var $opponent_ac;
+				var $opponent_size;
+				var $to_hit_adjustment;
+				var $key;
+				//
+				$id=$('#monster_weapon').val();
+				//
+				// Did user choose a weapon?
+				if ($id==-1)
+				{
+					// No weapon
+					//
+					off('monster_initiative_other_adjustment');
+					off('monster_initiative_weapon_speed');
+					off('monster_initiative_dex_adjustment');
+					//
+					off('monster_to_hit_base');
+					off('monster_to_hit_other_adjustment');
+					off('monster_to_hit_weapon_adjustment');
+					off('monster_to_hit_str_adjustment');
+					//
+					off('monster_weapon_damage_dice_count');
+					off('monster_weapon_damage_dice_sides');
+					off('monster_weapon_damage_dice_plus');
+					off('monster_weapon_damage_strength_adjustment');
+					//
+					$('#monster_initiative_unarmed').removeClass('hide');
+					$('#monster_to_hit_unarmed').removeClass('hide');
+					$('#monster_damage_unarmed').removeClass('hide');
+				}
+				else
+				{
+					// Yes, picked a weapon
+					//
+					$speed=$weapons[$id].Speed_Factor;
+					//
+					$('#monster_initiative_weapon_speed').val($speed);
+					//
+					$opponent_size=$("input[name='monster_size']:checked"). val();
+					//
+					if ($opponent_size==='sm')
+					{
+						$low=$weapons[$id].Sm_Low;
+						$high=$weapons[$id].Sm_High;
+					}
+					else
+					{
+						$low=$weapons[$id].Lg_Low;
+						$high=$weapons[$id].Lg_High;
+					}
+					//
+					$dice=get_dice($low, $high);
+					//
+					$opponent_ac=$('#monster_ac').val();
+					if ($opponent_ac!=='?')
+					{
+						$opponent_ac=parseInt($('#monster_ac').val());
+						//
+						if ($opponent_ac<2) {$opponent_ac=2;}
+						//
+						$key='AC_'+$opponent_ac;
+						$to_hit_adjustment=$weapons[$id][$key];
+					}
+					else
+					{
+						$to_hit_adjustment='?';
+					}
+					//
+					$('#monster_to_hit_weapon_adjustment').val($to_hit_adjustment);
+					//
+					on('monster_initiative_other_adjustment');
+					on('monster_initiative_weapon_speed');
+					on('monster_initiative_dex_adjustment');
+					//
+					on('monster_to_hit_base');
+					on('monster_to_hit_other_adjustment');
+					on('monster_to_hit_weapon_adjustment');
+					on('monster_to_hit_str_adjustment');
+					//
+					on('monster_weapon_damage_dice_count');
+					on('monster_weapon_damage_dice_sides');
+					on('monster_weapon_damage_dice_plus');
+					on('monster_weapon_damage_adjustment');
+					on('monster_weapon_damage_strength_adjustment');
+					//
+					$('#monster_weapon_damage_dice_count').val($dice.count);
+					$('#monster_weapon_damage_dice_sides').val($dice.sides);
+					$('#monster_weapon_damage_dice_plus').val($dice.plus);
+					//
+					$('#monster_initiative_unarmed').addClass('hide');
+					$('#monster_to_hit_unarmed').addClass('hide');
+					$('#monster_damage_unarmed').addClass('hide');
+				} // if ($id==-1)
+				//
+				if ($update===true) {update_fight();}
 				//
 				return;
 			} // monster_weapon()
@@ -1766,40 +2471,495 @@ $experience=[
 			//
 			function update_fight()
 			{
-				// Sets the fight buttons to disabled or not depending on if the fields have data.
-				// NO ATTEMPT is made to sanity check the data.
+				console.log('update_fight()');
+				var $character;
 				//
-				if (($('#player_ac').val()!='') && 
-						($('#player_to_hit_base').val()!='') && 
-						($('#player_ac_dex_adjustment').val()!='') && 
-						($('#player_initiative_dex_adjustment').val()!='') && 
-						($('#player_weapon_speed').val()!='') && 
-						($('#player_weapon_adjustment').val()!='') && 
-						($('#player_to_hit_str_adjustment').val()!='') && 
-						($('#player_hit_points').val()!='') && 
-						($('#player_hit_dice_sides').val()!='') && 
-						($('#player_hit_dice_count').val()!='') && 
-						($('#player_hit_dice_plus').val()!='') &&
-						($('#monster_ac').val()!='') && 
-						($('#monster_to_hit_base').val()!='') && 
-						($('#monster_ac_dex_adjustment').val()!='') && 
-						($('#monster_initiative_dex_adjustment').val()!='') && 
-						($('#monster_weapon_speed').val()!='') && 
-						($('#monster_weapon_adjustment').val()!='') && 
-						($('#monster_to_hit_str_adjustment').val()!='') && 
-						($('#monster_hit_points').val()!='') && 
-						($('#monster_hit_dice_sides').val()!='') && 
-						($('#monster_hit_dice_count').val()!='') && 
-						($('#monster_hit_dice_plus').val()!=''))
+				$character=$('#player_type_character').prop("checked");
+				//
+				// Is this a character?
+				if ($character===true)
 				{
-					$('#fight1').prop('disabled', false);
-					$('#fight1000').prop('disabled', false);
+					// Yes, a character
+					//
+					if ($('#player_class').val()==='?')
+					{
+						$('#player_class_header').addClass('danger');
+					}
+					else
+					{
+						$('#player_class_header').removeClass('danger');
+					}
+					//
+					if ($('#player_level').val()==='?')
+					{
+						$('#player_level_header').addClass('danger');
+					}
+					else
+					{
+						$('#player_level_header').removeClass('danger');
+					}
+					//
+					if ($('#player_strength').val()==='?')
+					{
+						$('#player_strength_header').addClass('danger');
+					}
+					else
+					{
+						$('#player_strength_header').removeClass('danger');
+					}
+					//
+					if ($('#player_dexterity').val()==='?')
+					{
+						$('#player_dexterity_header').addClass('danger');
+					}
+					else
+					{
+						$('#player_dexterity_header').removeClass('danger');
+					}
+					//
+					if (isNaN(parseInt($('#player_ac_dex_adjustment').val())))
+					{
+						$('#player_ac_dex_adjustment_header').addClass('danger');
+					}
+					else
+					{
+						$('#player_ac_dex_adjustment_header').removeClass('danger');
+					}
+					//
+					if (parseInt($('#player_weapon').val())!==-1)
+					{
+						if (isNaN(parseInt($('#player_initiative_other_adjustment').val())))
+						{
+							$('#player_initiative_other_adjustment_header').addClass('danger');
+						}
+						else
+						{
+							$('#player_initiative_other_adjustment_header').removeClass('danger');
+						}
+						//
+						if (isNaN(parseInt($('#player_initiative_weapon_speed').val())))
+						{
+							$('#player_initiative_weapon_speed_header').addClass('danger');
+						}
+						else
+						{
+							$('#player_initiative_weapon_speed_header').removeClass('danger');
+						}
+						//
+						if (isNaN(parseInt($('#player_initiative_dex_adjustment').val())))
+						{
+							$('#player_initiative_dex_adjustment_header').addClass('danger');
+						}
+						else
+						{
+							$('#player_initiative_dex_adjustment_header').removeClass('danger');
+						}
+						//
+						if (isNaN(parseInt($('#player_to_hit_base').val())))
+						{
+							$('#player_to_hit_base_header').addClass('danger');
+						}
+						else
+						{
+							$('#player_to_hit_base_header').removeClass('danger');
+						}
+						//
+						if (isNaN(parseInt($('#player_to_hit_other_adjustment').val())))
+						{
+							$('#player_to_hit_other_adjustment_header').addClass('danger');
+						}
+						else
+						{
+							$('#player_to_hit_other_adjustment_header').removeClass('danger');
+						}
+						//
+						if (isNaN(parseInt($('#player_to_hit_weapon_adjustment').val())))
+						{
+							$('#player_to_hit_weapon_adjustment_header').addClass('danger');
+						}
+						else
+						{
+							$('#player_to_hit_weapon_adjustment_header').removeClass('danger');
+						}
+						//
+						if (isNaN(parseInt($('#player_to_hit_str_adjustment').val())))
+						{
+							$('#player_to_hit_str_adjustment_header').addClass('danger');
+						}
+						else
+						{
+							$('#player_to_hit_str_adjustment_header').removeClass('danger');
+						}
+					}
+					//
+					if (isNaN(parseInt($('#player_ac_dex_adjustment').val())))
+					{
+						$('#player_ac_dex_adjustment_header').addClass('danger');
+					}
+					else
+					{
+						$('#player_ac_dex_adjustment_header').removeClass('danger');
+					}
 				}
 				else
 				{
-					$('#fight1').prop('disabled', true);
-					$('#fight1000').prop('disabled', true);
+					// No, a creature
+					//
+					if ($('#player_size_sm').prop("checked") || $('#player_size_l').prop("checked"))
+					{
+						$('#player_size_header').removeClass('danger');
+					}
+					else
+					{
+						$('#player_size_header').addClass('danger');
+					}
+					//
+					if (isNaN(parseInt($('#player_initiative_other_adjustment').val())))
+					{
+						$('#player_initiative_other_adjustment_header').addClass('danger');
+					}
+					else
+					{
+						$('#player_initiative_other_adjustment_header').removeClass('danger');
+					}
+					//
+					if (isNaN(parseInt($('#player_to_hit_base').val())))
+					{
+						$('#player_to_hit_base_header').addClass('danger');
+					}
+					else
+					{
+						$('#player_to_hit_base_header').removeClass('danger');
+					}
+					//
+					if (isNaN(parseInt($('#player_to_hit_other_adjustment').val())))
+					{
+						$('#player_to_hit_other_adjustment_header').addClass('danger');
+					}
+					else
+					{
+						$('#player_to_hit_other_adjustment_header').removeClass('danger');
+					}
+					//
+					if (isNaN(parseInt($('#player_hit_dice_count').val())))
+					{
+						$('#player_hit_dice_count_header').addClass('danger');
+					}
+					else
+					{
+						$('#player_hit_dice_count_header').removeClass('danger');
+					}
+					//
+					if (isNaN(parseInt($('#player_hit_dice_sides').val())))
+					{
+						$('#player_hit_dice_sides_header').addClass('danger');
+					}
+					else
+					{
+						$('#player_hit_dice_sides_header').removeClass('danger');
+					}
+					//
+					if (isNaN(parseInt($('#player_hit_dice_plus').val())))
+					{
+						$('#player_hit_dice_plus_header').addClass('danger');
+					}
+					else
+					{
+						$('#player_hit_dice_plus_header').removeClass('danger');
+					}
+				} // if ($character===true)
+				//
+				if (isNaN(parseInt($('#player_hit_points').val())))
+				{
+					$('#player_hit_points_header').addClass('danger');
 				}
+				else
+				{
+					$('#player_hit_points_header').removeClass('danger');
+				}
+				//
+				if ($('#player_ac').val()==='?')
+				{
+					$('#player_ac_header').addClass('danger');
+				}
+				else
+				{
+					$('#player_ac_header').removeClass('danger');
+				}
+				//
+				if (isNaN(parseInt($('#player_ac_other_adjustment').val())))
+				{
+					$('#player_ac_other_adjustment_header').addClass('danger');
+				}
+				else
+				{
+					$('#player_ac_other_adjustment_header').removeClass('danger');
+				}
+				//
+				if (isNaN(parseInt($('#player_xp_base').val())))
+				{
+					$('#player_xp_base_header').addClass('danger');
+				}
+				else
+				{
+					$('#player_xp_base_header').removeClass('danger');
+				}
+				//
+				if (isNaN(parseInt($('#player_xp_per_hp').val())))
+				{
+					$('#player_xp_per_hp_header').addClass('danger');
+				}
+				else
+				{
+					$('#player_xp_per_hp_header').removeClass('danger');
+				}
+				//
+				/////////////
+				// MONSTER //
+				/////////////
+				//
+				//
+				$character=$('#monster_type_character').prop("checked");
+				//
+				// Is this a character?
+				if ($character===true)
+				{
+					// Yes, a character
+					//
+					if ($('#monster_class').val()==='?')
+					{
+						$('#monster_class_header').addClass('danger');
+					}
+					else
+					{
+						$('#monster_class_header').removeClass('danger');
+					}
+					//
+					if ($('#monster_level').val()==='?')
+					{
+						$('#monster_level_header').addClass('danger');
+					}
+					else
+					{
+						$('#monster_level_header').removeClass('danger');
+					}
+					//
+					if ($('#monster_strength').val()==='?')
+					{
+						$('#monster_strength_header').addClass('danger');
+					}
+					else
+					{
+						$('#monster_strength_header').removeClass('danger');
+					}
+					//
+					if ($('#monster_dexterity').val()==='?')
+					{
+						$('#monster_dexterity_header').addClass('danger');
+					}
+					else
+					{
+						$('#monster_dexterity_header').removeClass('danger');
+					}
+					//
+					if (isNaN(parseInt($('#monster_ac_dex_adjustment').val())))
+					{
+						$('#monster_ac_dex_adjustment_header').addClass('danger');
+					}
+					else
+					{
+						$('#monster_ac_dex_adjustment_header').removeClass('danger');
+					}
+					//
+					if (parseInt($('#monster_weapon').val())!==-1)
+					{
+						if (isNaN(parseInt($('#monster_initiative_other_adjustment').val())))
+						{
+							$('#monster_initiative_other_adjustment_header').addClass('danger');
+						}
+						else
+						{
+							$('#monster_initiative_other_adjustment_header').removeClass('danger');
+						}
+						//
+						if (isNaN(parseInt($('#monster_initiative_weapon_speed').val())))
+						{
+							$('#monster_initiative_weapon_speed_header').addClass('danger');
+						}
+						else
+						{
+							$('#monster_initiative_weapon_speed_header').removeClass('danger');
+						}
+						//
+						if (isNaN(parseInt($('#monster_initiative_dex_adjustment').val())))
+						{
+							$('#monster_initiative_dex_adjustment_header').addClass('danger');
+						}
+						else
+						{
+							$('#monster_initiative_dex_adjustment_header').removeClass('danger');
+						}
+						//
+						if (isNaN(parseInt($('#monster_to_hit_base').val())))
+						{
+							$('#monster_to_hit_base_header').addClass('danger');
+						}
+						else
+						{
+							$('#monster_to_hit_base_header').removeClass('danger');
+						}
+						//
+						if (isNaN(parseInt($('#monster_to_hit_other_adjustment').val())))
+						{
+							$('#monster_to_hit_other_adjustment_header').addClass('danger');
+						}
+						else
+						{
+							$('#monster_to_hit_other_adjustment_header').removeClass('danger');
+						}
+						//
+						if (isNaN(parseInt($('#monster_to_hit_weapon_adjustment').val())))
+						{
+							$('#monster_to_hit_weapon_adjustment_header').addClass('danger');
+						}
+						else
+						{
+							$('#monster_to_hit_weapon_adjustment_header').removeClass('danger');
+						}
+						//
+						if (isNaN(parseInt($('#monster_to_hit_str_adjustment').val())))
+						{
+							$('#monster_to_hit_str_adjustment_header').addClass('danger');
+						}
+						else
+						{
+							$('#monster_to_hit_str_adjustment_header').removeClass('danger');
+						}
+					}
+					//
+					if (isNaN(parseInt($('#monster_ac_dex_adjustment').val())))
+					{
+						$('#monster_ac_dex_adjustment_header').addClass('danger');
+					}
+					else
+					{
+						$('#monster_ac_dex_adjustment_header').removeClass('danger');
+					}
+				}
+				else
+				{
+					// No, a creature
+					//
+					if ($('#monster_size_sm').prop("checked") || $('#monster_size_l').prop("checked"))
+					{
+						$('#monster_size_header').removeClass('danger');
+					}
+					else
+					{
+						$('#monster_size_header').addClass('danger');
+					}
+					//
+					if (isNaN(parseInt($('#monster_initiative_other_adjustment').val())))
+					{
+						$('#monster_initiative_other_adjustment_header').addClass('danger');
+					}
+					else
+					{
+						$('#monster_initiative_other_adjustment_header').removeClass('danger');
+					}
+					//
+					if (isNaN(parseInt($('#monster_to_hit_base').val())))
+					{
+						$('#monster_to_hit_base_header').addClass('danger');
+					}
+					else
+					{
+						$('#monster_to_hit_base_header').removeClass('danger');
+					}
+					//
+					if (isNaN(parseInt($('#monster_to_hit_other_adjustment').val())))
+					{
+						$('#monster_to_hit_other_adjustment_header').addClass('danger');
+					}
+					else
+					{
+						$('#monster_to_hit_other_adjustment_header').removeClass('danger');
+					}
+					//
+					if (isNaN(parseInt($('#monster_hit_dice_count').val())))
+					{
+						$('#monster_hit_dice_count_header').addClass('danger');
+					}
+					else
+					{
+						$('#monster_hit_dice_count_header').removeClass('danger');
+					}
+					//
+					if (isNaN(parseInt($('#monster_hit_dice_sides').val())))
+					{
+						$('#monster_hit_dice_sides_header').addClass('danger');
+					}
+					else
+					{
+						$('#monster_hit_dice_sides_header').removeClass('danger');
+					}
+					//
+					if (isNaN(parseInt($('#monster_hit_dice_plus').val())))
+					{
+						$('#monster_hit_dice_plus_header').addClass('danger');
+					}
+					else
+					{
+						$('#monster_hit_dice_plus_header').removeClass('danger');
+					}
+				} // if ($character===true)
+				//
+				if (isNaN(parseInt($('#monster_hit_points').val())))
+				{
+					$('#monster_hit_points_header').addClass('danger');
+				}
+				else
+				{
+					$('#monster_hit_points_header').removeClass('danger');
+				}
+				//
+				if ($('#monster_ac').val()==='?')
+				{
+					$('#monster_ac_header').addClass('danger');
+				}
+				else
+				{
+					$('#monster_ac_header').removeClass('danger');
+				}
+				//
+				if (isNaN(parseInt($('#monster_ac_other_adjustment').val())))
+				{
+					$('#monster_ac_other_adjustment_header').addClass('danger');
+				}
+				else
+				{
+					$('#monster_ac_other_adjustment_header').removeClass('danger');
+				}
+				//
+				if (isNaN(parseInt($('#monster_xp_base').val())))
+				{
+					$('#monster_xp_base_header').addClass('danger');
+				}
+				else
+				{
+					$('#monster_xp_base_header').removeClass('danger');
+				}
+				//
+				if (isNaN(parseInt($('#monster_xp_per_hp').val())))
+				{
+					$('#monster_xp_per_hp_header').addClass('danger');
+				}
+				else
+				{
+					$('#monster_xp_per_hp_header').removeClass('danger');
+				}
+				//
+				return;
 			} // update_fight()
 			//
 			//
@@ -1905,7 +3065,7 @@ $experience=[
 						</b><br><input id='player_type_creature' type='radio' name='player_type' value='creature' onchange='player_type();'>&nbsp;
 						<b>
 							<font size='+2'>Creature</font>
-						</b>&nbsp;&nbsp;&nbsp;<select id='player_list' name='player_list' onchange='player_select();' class='hide'></select>
+						</b>&nbsp;&nbsp;&nbsp;<select id='player_list' name='player_list' onchange='player_select(true);' class='hide'><option value='-1'>[Quick Entry]</option></select>
 					</td>
 					<td colspan=2>
 						<b>
@@ -1915,13 +3075,14 @@ $experience=[
 						<b>
 							<font size='+2'>Creature</font>
 						</b>&nbsp;&nbsp;&nbsp;
-						<select id='monster_list' name='monster_list' onchange='monster_select();'></select>
+						<select id='monster_list' name='monster_list' onchange='monster_select(true);'><option value='-1'>[Quick Entry]</option></select>
 					</td>
 				</tr>
 				<tr id='class'>
 					<td id='player_class_header' class='subhead'>&nbsp;&nbsp;&nbsp;Class</td>
 					<td>
-						<select id='player_class' name='player_class' onchange='player_class_level();'>
+						<select id='player_class' name='player_class' onchange='player_class_level(true);'>
+							<option value='?'>?</option>
 							<option value='Cleric'>Cleric</option>
 							<option value='Druid'>- Druid</option>
 							<option value='Fighter'>Fighter</option>
@@ -1936,7 +3097,8 @@ $experience=[
 					</td>
 					<td id='monster_class_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Class</td>
 					<td>
-						<select id='monster_class' name='monster_class' onchange='monster_class_level();' class='hide'>
+						<select id='monster_class' name='monster_class' onchange='monster_class_level(true);' class='hide'>
+							<option value='?'>?</option>
 							<option value='Cleric'>Cleric</option>
 							<option value='Druid'>- Druid</option>
 							<option value='Fighter'>Fighter</option>
@@ -1953,7 +3115,8 @@ $experience=[
 				<tr id='level'>
 					<td id='player_level_header' class='subhead'>&nbsp;&nbsp;&nbsp;Level</td>
 					<td>
-						<select id='player_level' name='player_level' onchange='player_class_level();'>
+						<select id='player_level' name='player_level' onchange='player_class_level(true);'>
+							<option value='?'>?</option>
 							<option value='1'>1</option>
 							<option value='2'>2</option>
 							<option value='3'>3</option>
@@ -1979,7 +3142,8 @@ $experience=[
 					</td>
 					<td id='monster_level_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Level</td>
 					<td>
-						<select id='monster_level' name='monster_level' onchange='monster_class_level();' class='hide'>
+						<select id='monster_level' name='monster_level' onchange='monster_class_level(true);' class='hide'>
+							<option value='?'>?</option>
 							<option value='1'>1</option>
 							<option value='2'>2</option>
 							<option value='3'>3</option>
@@ -2007,7 +3171,8 @@ $experience=[
 				<tr id='strength'>
 					<td id='player_strength_header' class='subhead'>&nbsp;&nbsp;&nbsp;Strength</td>
 					<td>
-						<select id='player_strength' onchange='player_str();'>
+						<select id='player_strength' onchange='player_str(true);'>
+							<option value='?'>?</option>
 							<option value='3'>3</option>
 							<option value='4'>4</option>
 							<option value='5'>5</option>
@@ -2015,7 +3180,7 @@ $experience=[
 							<option value='7'>7</option>
 							<option value='8'>8</option>
 							<option value='9'>9</option>
-							<option value='10' selected>10</option>
+							<option value='10'>10</option>
 							<option value='11'>11</option>
 							<option value='12'>12</option>
 							<option value='13'>13</option>
@@ -2025,7 +3190,7 @@ $experience=[
 							<option value='17'>17</option>
 							<option value='18'>18</option>
 						</select>&nbsp;&nbsp;&nbsp;
-						<select id='player_strength_percent' onchange='player_str()' class='hide'>
+						<select id='player_strength_percent' onchange='player_str(true)' class='hide'>
 							<option value='01-50' selected>1-50</option>
 							<option value='51-75'>51-75</option>
 							<option value='76-90'>76-90</option>
@@ -2035,7 +3200,8 @@ $experience=[
 					</td>
 					<td id='monster_strength_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Strength</td>
 					<td>
-						<select id='monster_strength' onchange='monster_str();' class='hide'>
+						<select id='monster_strength' onchange='monster_str(true);' class='hide'>
+							<option value='?'>?</option>
 							<option value='3'>3</option>
 							<option value='4'>4</option>
 							<option value='5'>5</option>
@@ -2053,7 +3219,7 @@ $experience=[
 							<option value='17'>17</option>
 							<option value='18'>18</option>
 						</select>
-						<select id='monster_strength_percent' onchange='player_str()' class='hide'>
+						<select id='monster_strength_percent' onchange='monster_str(true)' class='hide'>
 							<option value='01-50' selected>1-50</option>
 							<option value='51-75'>51-75</option>
 							<option value='76-90'>76-90</option>
@@ -2065,7 +3231,8 @@ $experience=[
 				<tr id='dexterity'>
 					<td id='player_dexterity_header' class='subhead'>&nbsp;&nbsp;&nbsp;Dexterity</td>
 					<td>
-						<select id='player_dexterity' onchange='player_dex();'>
+						<select id='player_dexterity' onchange='player_dex(true);'>
+							<option value='?'>?</option>
 							<option value='3'>3</option>
 							<option value='4'>4</option>
 							<option value='5'>5</option>
@@ -2073,7 +3240,7 @@ $experience=[
 							<option value='7'>7</option>
 							<option value='8'>8</option>
 							<option value='9'>9</option>
-							<option value='10' selected>10</option>
+							<option value='10'>10</option>
 							<option value='11'>11</option>
 							<option value='12'>12</option>
 							<option value='13'>13</option>
@@ -2086,7 +3253,8 @@ $experience=[
 					</td>
 					<td id='monster_dexterity_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Dexterity</td>
 					<td>
-						<select id='monster_dexterity' onchange='monster_dex();' class='hide'>
+						<select id='monster_dexterity' onchange='monster_dex(true);' class='hide'>
+							<option value='?'>?</option>
 							<option value='3'>3</option>
 							<option value='4'>4</option>
 							<option value='5'>5</option>
@@ -2107,25 +3275,26 @@ $experience=[
 					</td>
 				</tr>
 				<tr id='hit_points'>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Hit&nbsp;Points</td><td><input id='player_hit_points' type='input' onKeyUp='update_fight();' class='enter_data'></td>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Hit&nbsp;Points</td><td><input id='monster_hit_points' type='input' onKeyUp='update_fight();' class='enter_data'></td>
-				</tr>
+					<td id='player_hit_points_header' class='subhead'>&nbsp;&nbsp;&nbsp;Hit&nbsp;Points</td><td><input id='player_hit_points' type='input' onKeyUp='update_fight();' class='enter_data'></td>
+					<td id='monster_hit_points_header' class='subhead'>&nbsp;&nbsp;&nbsp;Hit&nbsp;Points</td><td><input id='monster_hit_points' type='input' onKeyUp='update_fight();' class='enter_data'></td>
+				</tr> 
 				<tr id='size'>
 					<td id='player_size_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Size</td><td><span id='player_size_buttons' class='hide'><input id='player_size_sm' name='player_size' type='radio' value='sm' onchange='update_fight();' checked>&nbsp;SM&nbsp;&nbsp;&nbsp;<input id='player_size_l' name='player_size' type='radio' value='l' onchange='update_fight();'>&nbsp;L</span></td>
 					<td id='monster_size_header' class='subhead'>&nbsp;&nbsp;&nbsp;Size</td><td><span id='monster_size_buttons'><input id='monster_size_sm' name='monster_size' type='radio' value='sm' onchange='update_fight();' checked>&nbsp;SM&nbsp;&nbsp;&nbsp;<input id='monster_size_l' name='monster_size' type='radio' value='l' onchange='update_fight();'>&nbsp;L</span></td>
 				</tr>
 				<tr id='weapon'>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Weapon</td><td><select id='player_weapon' onchange='player_weapon();'><option value='-1'>No Weapon</option></select></td>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Weapon</td><td><select id='monster_weapon' onchange='monster_weapon();'><option value='-1'>No Weapon</option></select></td>
+					<td id='player_weapon_header' class='subhead'>&nbsp;&nbsp;&nbsp;Weapon</td><td><select id='player_weapon' onchange='player_weapon(true);'><option value='-1'>No Weapon</option></select></td>
+					<td id='monster_weapon_header' class='subhead'>&nbsp;&nbsp;&nbsp;Weapon</td><td><select id='monster_weapon' onchange='monster_weapon();'><option value='-1'>No Weapon</option></select></td>
 				</tr>
 				<tr id='armor_class_header' class='header'>
 					<td colspan=2 valign='bottom' class='subhead'><b><font size='+2'>Armor&nbsp;Class</font></b></td>
 					<td colspan=2 valign='bottom' class='subhead'><b><font size='+2'>Armor&nbsp;Class</font></b></td>
 				</tr>
 				<tr id='armor_class'>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Armor&nbsp;Class</td>
+					<td id='player_ac_header' class='subhead'>&nbsp;&nbsp;&nbsp;Armor&nbsp;Class</td>
 					<td>
-						<select id='player_ac' onKeyUp='update_fight();'>
+						<select id='player_ac' onChange='update_fight();'>
+							<option value='?'>?</option>
 							<option value='-10'>-10</option>
 							<option value='-9'>-9</option>
 							<option value='-8'>-8</option>
@@ -2146,12 +3315,13 @@ $experience=[
 							<option value='7'>7</option>
 							<option value='8'>8</option>
 							<option value='9'>9</option>
-							<option value='10' selected>10</option>
+							<option value='10'>10</option>
 						</select>
 					</td>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Armor&nbsp;Class</td>
+					<td id='monster_ac_header' class='subhead'>&nbsp;&nbsp;&nbsp;Armor&nbsp;Class</td>
 					<td>
-						<select id='monster_ac' onKeyUp='update_fight();'>
+						<select id='monster_ac' onChange='update_fight();'>
+							<option value='?'>?</option>
 							<option value='-10'>-10</option>
 							<option value='-9'>-9</option>
 							<option value='-8'>-8</option>
@@ -2172,57 +3342,57 @@ $experience=[
 							<option value='7'>7</option>
 							<option value='8'>8</option>
 							<option value='9'>9</option>
-							<option value='10' selected>10</option>
+							<option value='10'>10</option>
 						</select>
 					</td>
 				</tr>
 				<tr id='ac_magic_adjustment'>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='player_ac_other_adjustment' type='input' onKeyUp='update_fight();' class='enter_data' value='0'></td>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='monster_ac_other_adjustment' type='input' onKeyUp='update_fight();' class='enter_data' value='0'></td>
+					<td id='player_ac_other_adjustment_header' class='subhead'>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='player_ac_other_adjustment' type='input' onKeyUp='update_fight();' class='enter_data' value='0'></td>
+					<td id='monster_ac_other_adjustment_header' class='subhead'>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='monster_ac_other_adjustment' type='input' onKeyUp='update_fight();' class='enter_data' value='0'></td>
 				</tr>
 				<tr id='ac_dex_adjustment'>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Dexterity&nbsp;Adjustment</td><td><input id='player_ac_dex_adjustment' type='input' onKeyUp='update_fight();' class='enter_data'></td>
-					<td class='subhead out'>&nbsp;&nbsp;&nbsp;Dexterity&nbsp;Adjustment</td><td><input id='monster_ac_dex_adjustment' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
+					<td id='player_ac_dex_adjustment_header' class='subhead'>&nbsp;&nbsp;&nbsp;Dexterity&nbsp;Adjustment</td><td><input id='player_ac_dex_adjustment' type='input' onKeyUp='update_fight();' class='enter_data'></td>
+					<td id='monster_ac_dex_adjustment_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Dexterity&nbsp;Adjustment</td><td><input id='monster_ac_dex_adjustment' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
 				</tr>
 				<tr id='initiative_header' class='header'>
-					<td colspan=2 valign='bottom' class='subhead'><b><font size='+2'>Initiative</font></b></td>
-					<td colspan=2 valign='bottom' class='subhead'><b><font size='+2'>Initiative</font></b></td>
+					<td valign='bottom' class='subhead'><b><font size='+2'>Initiative</font></b></td><td><span id='player_initiative_unarmed' class='danger'>UNARMED COMBAT</span></td>
+					<td valign='bottom' class='subhead'><b><font size='+2'>Initiative</font></b></td><td><span id='monster_initiative_unarmed' class='danger hide'>UNARMED COMBAT</span></td>
 				</tr>
 				<tr id='initiative_magic_adjustment'>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='player_initiative_other_adjustment' type='input' onKeyUp='update_fight();' value='0' class='enter_data'></td>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='monster_initiative_other_adjustment' type='input' onKeyUp='update_fight();' value='0' class='enter_data'></td>
+					<td id='player_initiative_other_adjustment_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='player_initiative_other_adjustment' type='input' onKeyUp='update_fight();' value='0' class='enter_data hide'></td>
+					<td id='monster_initiative_other_adjustment_header' class='subhead'>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='monster_initiative_other_adjustment' type='input' onKeyUp='update_fight();' value='0' class='enter_data'></td>
 				</tr>
 				<tr id='initiative_weapon_speed'>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Weapon&nbsp;Speed</td><td><input id='player_initiative_weapon_speed' type='input' onKeyUp='update_fight();' class='enter_data'></td>
-					<td class='subhead out'>&nbsp;&nbsp;&nbsp;Weapon&nbsp;Speed</td><td><input id='monster_initiative_weapon_speed' type='input' onKeyUp='update_fight();'  class='enter_data hide'></td>
+					<td id='player_initiative_weapon_speed_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Weapon&nbsp;Speed</td><td><input id='player_initiative_weapon_speed' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
+					<td id='monster_initiative_weapon_speed_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Weapon&nbsp;Speed</td><td><input id='monster_initiative_weapon_speed' type='input' onKeyUp='update_fight();'  class='enter_data hide'></td>
 				</tr>
 				<tr id='initiative_ac_dex_adjustment'>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Dexterity&nbsp;Adjustment</td><td><input id='player_initiative_dex_adjustment' type='input' onKeyUp='update_fight();' class='enter_data'></td>
-					<td class='subhead out'>&nbsp;&nbsp;&nbsp;Dexterity&nbsp;Adjustment</td><td><input id='monster_initiative_dex_adjustment' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
+					<td id='player_initiative_dex_adjustment_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Dexterity&nbsp;Adjustment</td><td><input id='player_initiative_dex_adjustment' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
+					<td id='monster_initiative_dex_adjustment_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Dexterity&nbsp;Adjustment</td><td><input id='monster_initiative_dex_adjustment' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
 				</tr>
 				<tr id='to_hit_header' class='header'>
-					<td colspan=2 valign='bottom' class='subhead'><b><font size='+2'>To&nbsp;Hit</font></b></td>
-					<td colspan=2 valign='bottom' class='subhead'><b><font size='+2'>To&nbsp;Hit</font></b></td>
+					<td valign='bottom' class='subhead'><b><font size='+2'>To&nbsp;Hit</font></b></td><td><span id='player_to_hit_unarmed' class='danger'>UNARMED COMBAT</span></td>
+					<td valign='bottom' class='subhead'><b><font size='+2'>To&nbsp;Hit</font></b></td><td><span id='monster_to_hit_unarmed' class='danger hide'>UNARMED COMBAT</span></td>
 				</tr>
 				<tr id='to_hit_base'>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;To&nbsp;Hit&nbsp;Base</td><td><input id='player_to_hit_base' type='input' onKeyUp='update_fight();' class='enter_data'></td>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;To&nbsp;Hit&nbsp;Base</td><td><input id='monster_to_hit_base' type='input' onKeyUp='update_fight();' class='enter_data'></td>
+					<td id='player_to_hit_base_header' class='subhead out'>&nbsp;&nbsp;&nbsp;To&nbsp;Hit&nbsp;Base</td><td><input id='player_to_hit_base' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
+					<td id='player_to_hit_base_header' class='subhead'>&nbsp;&nbsp;&nbsp;To&nbsp;Hit&nbsp;Base</td><td><input id='monster_to_hit_base' type='input' onKeyUp='update_fight();' class='enter_data'></td>
 				</tr>
 				<tr id='to_hit_magic_adjustment'>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='player_to_hit_other_adjustment' type='input' onKeyUp='update_fight();' value='0' class='enter_data'></td>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='monster_to_hit_other_adjustment' type='input' onKeyUp='update_fight();' value='0' class='enter_data'></td>
+					<td id='player_to_hit_other_adjustment_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='player_to_hit_other_adjustment' type='input' onKeyUp='update_fight();' value='0' class='enter_data hide'></td>
+					<td id='monster_to_hit_other_adjustment_header' class='subhead'>&nbsp;&nbsp;&nbsp;Magic/Other&nbsp;Adjustment</td><td><input id='monster_to_hit_other_adjustment' type='input' onKeyUp='update_fight();' value='0' class='enter_data'></td>
 				</tr>
 				<tr id='to_hit_weapon_adjustment'>
-					<td id='player_to_hit_weapon_adjustment_header' class='subhead'>&nbsp;&nbsp;&nbsp;Weapon&nbsp;Adjustment</td><td><input id='player_to_hit_weapon_adjustment' type='input' onKeyUp='update_fight();' class='enter_data'></td>
+					<td id='player_to_hit_weapon_adjustment_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Weapon&nbsp;Adjustment</td><td><input id='player_to_hit_weapon_adjustment' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
 					<td id='monster_to_hit_weapon_adjustment_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Weapon&nbsp;Adjustment</td><td><input id='monster_to_hit_weapon_adjustment' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
 				</tr>
 				<tr id='to_hit_str_adjustment'>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Strength&nbsp;Adjustment</td><td><input id='player_to_hit_str_adjustment' type='input' onKeyUp='update_fight();' class='enter_data'></td>
-					<td class='subhead out'>&nbsp;&nbsp;&nbsp;Strength&nbsp;Adjustment</td><td><input id='monster_to_hit_str_adjustment' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
+					<td id='player_to_hit_str_adjustment_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Strength&nbsp;Adjustment</td><td><input id='player_to_hit_str_adjustment' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
+					<td id='monster_to_hit_str_adjustment_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Strength&nbsp;Adjustment</td><td><input id='monster_to_hit_str_adjustment' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
 				</tr>
-				<tr id='hit_dice_header' class='header'>
-					<td colspan=2 valign='bottom' class='subhead'><b><font size='+2'>Damage</font></b></td>
-					<td colspan=2 valign='bottom' class='subhead'><b><font size='+2'>Damage</font></b></td>
+				<tr id='damage_header' class='header'>
+					<td valign='bottom' class='subhead'><b><font size='+2'>Damage</font></b></td><td><span id='player_damage_unarmed' class='danger'>UNARMED COMBAT</span></td>
+					<td valign='bottom' class='subhead'><b><font size='+2'>Damage</font></b></td><td><span id='monster_damage_unarmed' class='danger hide'>UNARMED COMBAT</span></td>
 				</tr>
 				<tr id='hit_dice_count'>
 					<td id='player_hit_dice_count_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Hit&nbsp;Dice&nbsp;Count</td><td><input id='player_hit_dice_count' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
@@ -2248,21 +3418,21 @@ $experience=[
 					<td id='player_weapon_damage_dice_plus_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Weapon&nbsp;Damage&nbsp;Plus</td><td><input id='player_weapon_damage_dice_plus' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
 					<td id='monster_weapon_damage_dice_plus_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Weapon&nbsp;Damage&nbsp;Plus</td><td><input id='monster_weapon_damage_dice_plus' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
 				</tr>
-				<tr id='hit_dice_strength_adjustment'>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;Strength&nbsp;Adjustment</td><td><input id='player_hit_dice_strength_adjustment' type='input' onKeyUp='update_fight();' class='enter_data'></td>
-					<td class='subhead out'>&nbsp;&nbsp;&nbsp;Strength&nbsp;Adjustment</td><td><input id='monster_hit_dice_strength_adjustment' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
+				<tr id='damage_weapon_strength_adjustment'>
+					<td id='player_weapon_damage_strength_adjustment_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Weapon&nbsp;Strength&nbsp;Adjustment</td><td><input id='player_weapon_damage_strength_adjustment' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
+					<td id='monster_damage_weapon_strength_adjustment_header' class='subhead out'>&nbsp;&nbsp;&nbsp;Weapon&nbsp;Strength&nbsp;Adjustment</td><td><input id='monster_damage_weapon_strength_adjustment' type='input' onKeyUp='update_fight();' class='enter_data hide'></td>
 				</tr>
 				<tr id='experience_header' class='header'>
 					<td colspan=2 valign='bottom' class='subhead'><b><font size='+2'>Experience</font></b></td>
 					<td colspan=2 valign='bottom' class='subhead'><b><font size='+2'>Experience</font></b></td>
 				</tr>
 				<tr id='experience_base'>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;XP&nbsp;Base</td><td><input id='player_xp_base' type='input' onKeyUp='update_fight();' class='enter_data'></td>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;XP&nbsp;Base</td><td><input id='monster_xp_base' type='input' onKeyUp='update_fight();' class='enter_data'></td>
+					<td id='player_xp_base_header' class='subhead'>&nbsp;&nbsp;&nbsp;XP&nbsp;Base</td><td><input id='player_xp_base' type='input' onKeyUp='update_fight();' class='enter_data'></td>
+					<td id='monster_xp_base_header' class='subhead'>&nbsp;&nbsp;&nbsp;XP&nbsp;Base</td><td><input id='monster_xp_base' type='input' onKeyUp='update_fight();' class='enter_data'></td>
 				</tr>
 				<tr id='experience_per_hp'>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;XP&nbsp;Per&nbsp;HP</td><td><input id='player_xp_per_hp' type='input' onKeyUp='update_fight();' class='enter_data'></td>
-					<td class='subhead'>&nbsp;&nbsp;&nbsp;XP&nbsp;Per&nbsp;HP</td><td><input id='monster_xp_per_hp' type='input' onKeyUp='update_fight();' class='enter_data'></td>
+					<td id='player_xp_per_hp_header' class='subhead'>&nbsp;&nbsp;&nbsp;XP&nbsp;Per&nbsp;HP</td><td><input id='player_xp_per_hp' type='input' onKeyUp='update_fight();' class='enter_data'></td>
+					<td id='monster_xp_per_hp_header' class='subhead'>&nbsp;&nbsp;&nbsp;XP&nbsp;Per&nbsp;HP</td><td><input id='monster_xp_per_hp' type='input' onKeyUp='update_fight();' class='enter_data'></td>
 				</tr>
 				<tr id='experience_earned_on_miss'>
 					<td class='subhead'>&nbsp;&nbsp;&nbsp;XP&nbsp;Earned&nbsp;On&nbsp;Miss</td><td><input id='player_xp_earned_on_miss' type='checkbox' value='yes'></td>
